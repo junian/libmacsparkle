@@ -9,6 +9,7 @@
 #define _macsparkle_h_
 
 #include <stddef.h>
+#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,6 +69,28 @@ MAC_SPARKLE_API void mac_sparkle_set_appcast_url(const char *url);
  * @return 1 if a valid EdDSA public key is provided, 0 otherwise.
  */
 MAC_SPARKLE_API int mac_sparkle_set_eddsa_public_key(const char *pubkey);
+
+/**
+ * Sets application metadata.
+ *
+ * Normally, these are taken from the host bundle's Info.plist, but if your
+ * application doesn't use them for some reason, using this function is an
+ * alternative.
+ *
+ * @param company_name Company name of the vendor.
+ * @param app_name Application name. This is both shown to the user and used
+ *                 in HTTP User-Agent header.
+ * @param app_version Version of the app, as a string (e.g. "1.2" or "1.2rc1").
+ *
+ * @note @a company_name and @a app_name are used to determine the location of
+ * MacSparkle settings when custom configuration storage is used.
+ *
+ * @see mac_sparkle_set_app_build_version()
+ */
+MAC_SPARKLE_API void mac_sparkle_set_app_details(
+    const wchar_t *company_name,
+    const wchar_t *app_name,
+    const wchar_t *app_version);
 
 //@}
 

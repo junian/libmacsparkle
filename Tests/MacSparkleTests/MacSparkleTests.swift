@@ -80,3 +80,53 @@ import Testing
 @Test func cAPIRejectsNullEdDSAPublicKey() {
     #expect(mac_sparkle_set_eddsa_public_key(nil) == 0)
 }
+
+@Test func setAppDetailsStoresAllFields() {
+    MacSparkleSettings.setAppDetails(
+        companyName: "Acme Inc",
+        appName: "My App",
+        appVersion: "1.2.3"
+    )
+    #expect(MacSparkleSettings.companyNameString() == "Acme Inc")
+    #expect(MacSparkleSettings.appNameString() == "My App")
+    #expect(MacSparkleSettings.appVersionString() == "1.2.3")
+}
+
+@Test func setAppDetailsSkipsNilFields() {
+    MacSparkleSettings.setAppDetails(
+        companyName: "Acme Inc",
+        appName: "My App",
+        appVersion: "1.0"
+    )
+
+    MacSparkleSettings.setAppDetails(
+        companyName: nil,
+        appName: "Renamed App",
+        appVersion: nil
+    )
+
+    #expect(MacSparkleSettings.companyNameString() == "Acme Inc")
+    #expect(MacSparkleSettings.appNameString() == "Renamed App")
+    #expect(MacSparkleSettings.appVersionString() == "1.0")
+}
+
+@Test func cAPIStoresAppDetails() {
+    ("Acme Inc").withCString { companyName in
+        ("My App").withCString { appName in
+            ("1.2rc1").withCString { appVersion in
+                mac_sparkle_set_app_details(companyName, appName, appVersion)
+            }
+        }
+    }
+
+    #expect(MacSparkleSettings.companyNameString() == "Acme Inc")
+    #expect(MacSparkleSettings.appNameString() == "My App")
+    #expect(MacSparkleSettings.appVersionString() == "1.2rc1")
+}
+
+private func withWideCString<T>(_ string: String, _ body: (UnsafePointer<Int32>) throws -> T) rethrows -> T {
+    let buffer = Array(string.unicodeScalars.map { Int32($0.value) } + [0])
+    return try buffer.withUnsafeBufferPointer { ptr in
+        try body(ptr.baseAddress!)
+    }
+}

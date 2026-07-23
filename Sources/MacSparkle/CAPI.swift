@@ -28,3 +28,16 @@ public func mac_sparkle_set_eddsa_public_key(_ pubkey: UnsafePointer<CChar>?) ->
     MacSparkleSettings.setEdDSAPublicKey(keyString)
     return 1
 }
+
+@_cdecl("mac_sparkle_set_app_details")
+public func mac_sparkle_set_app_details(
+    _ companyName: UnsafePointer<CChar>?,
+    _ appName: UnsafePointer<CChar>?,
+    _ appVersion: UnsafePointer<CChar>?
+) {
+    MacSparkleSettings.setAppDetails(
+        companyName: companyName.map(String.init(cString:)) ?? "",
+        appName: appName.map(String.init(cString:)) ?? "",
+        appVersion: appVersion.map(String.init(cString:)) ?? ""
+    )
+}
