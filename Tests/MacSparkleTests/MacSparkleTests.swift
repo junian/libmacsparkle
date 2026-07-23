@@ -44,3 +44,39 @@ import Testing
     mac_sparkle_set_appcast_url(nil)
     #expect(MacSparkleSettings.appcastURLString() == "https://example.com/feed.xml")
 }
+
+@Test func eddsaValidationAcceptsValidPublicKey() {
+    #expect(MacSparkleEdDSAValidation.isValidPublicKey("pfIShU4dEXqPd5ObYNfDBiQWcXozk7estwzTnF9BamQ="))
+}
+
+@Test func eddsaValidationRejectsInvalidBase64() {
+    #expect(!MacSparkleEdDSAValidation.isValidPublicKey("not-valid-base64!!!"))
+}
+
+@Test func eddsaValidationRejectsWrongKeySize() {
+    #expect(!MacSparkleEdDSAValidation.isValidPublicKey("AQID"))
+}
+
+@Test func cAPIStoresValidEdDSAPublicKey() {
+    let publicKey = "pfIShU4dEXqPd5ObYNfDBiQWcXozk7estwzTnF9BamQ="
+    let result = publicKey.withCString { pointer in
+        mac_sparkle_set_eddsa_public_key(pointer)
+    }
+    #expect(result == 1)
+    #expect(MacSparkleSettings.eddsaPublicKeyString() == publicKey)
+}
+
+@Test func cAPIRejectsInvalidEdDSAPublicKey() {
+    MacSparkleSettings.setEdDSAPublicKey("pfIShU4dEXqPd5ObYNfDBiQWcXozk7estwzTnF9BamQ=")
+
+    let result = "invalid-key".withCString { pointer in
+        mac_sparkle_set_eddsa_public_key(pointer)
+    }
+
+    #expect(result == 0)
+    #expect(MacSparkleSettings.eddsaPublicKeyString() == "pfIShU4dEXqPd5ObYNfDBiQWcXozk7estwzTnF9BamQ=")
+}
+
+@Test func cAPIRejectsNullEdDSAPublicKey() {
+    #expect(mac_sparkle_set_eddsa_public_key(nil) == 0)
+}

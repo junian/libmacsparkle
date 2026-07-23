@@ -52,6 +52,23 @@ extern "C" {
  */
 MAC_SPARKLE_API void mac_sparkle_set_appcast_url(const char *url);
 
+/**
+ * Sets EdDSA public key.
+ *
+ * Only base64-encoded format is supported.
+ *
+ * Public key will be used to verify EdDSA signature of the update file.
+ * It will be set only if it contains a valid EdDSA public key.
+ *
+ * If this function isn't called by the app, the public key is obtained from
+ * the host bundle's Info.plist `SUPublicEDKey` key.
+ *
+ * @param pubkey EdDSA public key in base64 encoded format.
+ *
+ * @return 1 if a valid EdDSA public key is provided, 0 otherwise.
+ */
+MAC_SPARKLE_API int mac_sparkle_set_eddsa_public_key(const char *pubkey);
+
 //@}
 
 #ifdef __cplusplus
