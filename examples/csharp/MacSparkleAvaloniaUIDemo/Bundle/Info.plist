@@ -16,6 +16,8 @@
   <!-- Sparkle keys -->
   <key>SUFeedURL</key>
   <string>https://sparkle-project.org/files/sparkletestcast.xml</string>
+  <key>SUEnableAutomaticChecks</key>
+  <true/>
   <key>SUPublicEDKey</key>
   <string>pfIShU4dEXqPd5ObYNfDBiQWcXozk7estwzTnF9BamQ=</string>
 </dict>

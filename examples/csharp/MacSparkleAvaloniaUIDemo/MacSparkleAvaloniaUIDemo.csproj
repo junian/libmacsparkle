@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <RuntimeIdentifiers>osx-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,9 +34,9 @@
 
   <!-- Copy Sparkle.framework into output so the runtime can load it -->
   <ItemGroup>
-    <Content Include="../../../.build/release/Sparkle.framework/**">
+    <None Include="../../../.build/release/Sparkle.framework/**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>Sparkle.framework\%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </Content>
+    </None>
   </ItemGroup>
 </Project>
