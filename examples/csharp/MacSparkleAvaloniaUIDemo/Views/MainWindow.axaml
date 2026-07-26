@@ -15,6 +15,9 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" />
+        <Button Name="CheckButton" Content="Check for Updates" Margin="0,10,0,0" HorizontalAlignment="Center" />
+    </StackPanel>
 
 </Window>

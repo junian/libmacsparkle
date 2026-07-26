@@ -7,7 +7,7 @@ mkdir -p "$OUTPUT_DIR"
 
 X64_DYLIB="$ROOT_DIR/.build/x86_64-apple-macosx/release/libMacSparkle.dylib"
 ARM64_DYLIB="$ROOT_DIR/.build/arm64-apple-macosx/release/libMacSparkle.dylib"
-UNIVERSAL_DYLIB="$OUTPUT_DIR/libMacSparkle-universal.dylib"
+UNIVERSAL_DYLIB="$OUTPUT_DIR/libMacSparkle.dylib"
 
 echo "Building MacSparkle for x86_64..."
 swift build -c release --arch x86_64

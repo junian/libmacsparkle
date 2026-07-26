@@ -16,7 +16,7 @@ public final class SparkleUpdater: NSObject {
     /// Creates the shared updater controller and stores the initial updater reference.
     private override init() {
         self.controller = SPUStandardUpdaterController(
-            startingUpdater: true,
+            startingUpdater: false,
             updaterDelegate: nil,
             userDriverDelegate: nil
         )
