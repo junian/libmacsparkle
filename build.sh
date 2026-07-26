@@ -20,4 +20,7 @@ cp "$ARM64_DYLIB" "$OUTPUT_DIR/libMacSparkle-arm64.dylib" 2>/dev/null || true
 echo "Creating universal dylib..."
 lipo -create "$X64_DYLIB" "$ARM64_DYLIB" -output "$UNIVERSAL_DYLIB"
 
+echo "Signing universal dylib..."
+codesign --force --sign - "$UNIVERSAL_DYLIB"
+
 echo "Build artifacts written to $OUTPUT_DIR"
