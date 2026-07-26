@@ -57,4 +57,8 @@ final class SparkleUpdaterTests: XCTestCase {
     func testCABIEntryPointInitializesUpdater() {
         XCTAssertTrue(mac_sparkle_init_c())
     }
+
+    func testCABIEntryPointChecksForUpdatesWithUI() {
+        XCTAssertTrue(mac_sparkle_check_update_with_ui_c())
+    }
 }

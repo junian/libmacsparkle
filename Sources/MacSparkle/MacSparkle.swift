@@ -85,3 +85,11 @@ public func mac_sparkle_init_c() -> Bool {
     SparkleUpdater.shared.checkForUpdates()
     return true
 }
+
+@discardableResult
+@MainActor
+@_cdecl("mac_sparkle_check_update_with_ui")
+public func mac_sparkle_check_update_with_ui_c() -> Bool {
+    SparkleUpdater.shared.checkForUpdates()
+    return true
+}
