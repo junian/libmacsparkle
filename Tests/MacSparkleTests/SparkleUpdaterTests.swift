@@ -32,4 +32,12 @@ final class SparkleUpdaterTests: XCTestCase {
         XCTAssertTrue(mac_sparkle_set_appcast_url_c(cString))
         XCTAssertEqual(UserDefaults.standard.string(forKey: "SUFeedURL"), expectedURL)
     }
+
+    func testCABIEntryPointUpdatesEDDSAPublicKey() {
+        let expectedKey = "test-public-key"
+        let cString = (expectedKey as NSString).utf8String
+
+        XCTAssertTrue(mac_sparkle_set_eddsa_public_key_c(cString))
+        XCTAssertEqual(UserDefaults.standard.string(forKey: "SUPublicEDKey"), expectedKey)
+    }
 }

@@ -47,3 +47,16 @@ public func mac_sparkle_set_appcast_url_c(_ urlString: UnsafePointer<CChar>?) ->
     let value = String(cString: urlString)
     return SparkleUpdater.shared.setAppcastURL(value)
 }
+
+@discardableResult
+@MainActor
+@_cdecl("mac_sparkle_set_eddsa_public_key")
+public func mac_sparkle_set_eddsa_public_key_c(_ publicKey: UnsafePointer<CChar>?) -> Bool {
+    guard let publicKey else {
+        return false
+    }
+
+    let value = String(cString: publicKey)
+    UserDefaults.standard.set(value, forKey: "SUPublicEDKey")
+    return true
+}
