@@ -60,3 +60,20 @@ public func mac_sparkle_set_eddsa_public_key_c(_ publicKey: UnsafePointer<CChar>
     UserDefaults.standard.set(value, forKey: "SUPublicEDKey")
     return true
 }
+
+@discardableResult
+@MainActor
+@_cdecl("mac_sparkle_set_app_details")
+public func mac_sparkle_set_app_details_c(_ companyName: UnsafePointer<CChar>?, _ appName: UnsafePointer<CChar>?, _ versionString: UnsafePointer<CChar>?) -> Bool {
+    guard let companyName, let appName, let versionString else {
+        return false
+    }
+
+    let company = String(cString: companyName)
+    let app = String(cString: appName)
+    let version = String(cString: versionString)
+    let bundleName = "\(company) \(app) v\(version)"
+
+    UserDefaults.standard.set(bundleName, forKey: "SUBundleName")
+    return true
+}

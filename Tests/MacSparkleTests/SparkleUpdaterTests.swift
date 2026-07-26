@@ -40,4 +40,17 @@ final class SparkleUpdaterTests: XCTestCase {
         XCTAssertTrue(mac_sparkle_set_eddsa_public_key_c(cString))
         XCTAssertEqual(UserDefaults.standard.string(forKey: "SUPublicEDKey"), expectedKey)
     }
+
+    func testCABIEntryPointUpdatesAppDetails() {
+        let company = "Example Company"
+        let app = "Example App"
+        let version = "1.2.3"
+
+        let companyCString = (company as NSString).utf8String
+        let appCString = (app as NSString).utf8String
+        let versionCString = (version as NSString).utf8String
+
+        XCTAssertTrue(mac_sparkle_set_app_details_c(companyCString, appCString, versionCString))
+        XCTAssertEqual(UserDefaults.standard.string(forKey: "SUBundleName"), "\(company) \(app) v\(version)")
+    }
 }
