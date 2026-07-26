@@ -25,7 +25,7 @@ public partial class MainWindow : Window
         // Configure Sparkle on app load
         try
         {
-            NativeMethods.mac_sparkle_set_appcast_url("https://example.com/appcast.xml");
+            NativeMethods.mac_sparkle_set_appcast_url("https://sparkle-project.org/files/sparkletestcast.xml");
             NativeMethods.mac_sparkle_set_eddsa_public_key("test-public-key");
             NativeMethods.mac_sparkle_set_app_details("Example Company", "Example App", "1.2.3");
             NativeMethods.mac_sparkle_init();
