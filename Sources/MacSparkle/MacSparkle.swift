@@ -23,10 +23,18 @@ public final class SparkleUpdater {
         }
 
         UserDefaults.standard.set(url.absoluteString, forKey: "SUFeedURL")
-        self.controller = SPUStandardUpdaterController(startingUpdater: false, updaterDelegate: nil, userDriverDelegate: nil)
-        self.updater = self.controller.updater
+        resetUpdater()
 
         return true
+    }
+
+    public func cleanup() {
+        resetUpdater()
+    }
+
+    private func resetUpdater() {
+        self.controller = SPUStandardUpdaterController(startingUpdater: false, updaterDelegate: nil, userDriverDelegate: nil)
+        self.updater = self.controller.updater
     }
 }
 
@@ -91,5 +99,13 @@ public func mac_sparkle_init_c() -> Bool {
 @_cdecl("mac_sparkle_check_update_with_ui")
 public func mac_sparkle_check_update_with_ui_c() -> Bool {
     SparkleUpdater.shared.checkForUpdates()
+    return true
+}
+
+@discardableResult
+@MainActor
+@_cdecl("mac_sparkle_cleanup")
+public func mac_sparkle_cleanup_c() -> Bool {
+    SparkleUpdater.shared.cleanup()
     return true
 }
