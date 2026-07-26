@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
+    "copy-native": "node copy-native.js",
+    "start": "npm run copy-native && electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,7 +14,6 @@
   "packageManager": "pnpm@10.29.3",
   "devDependencies": {
     "electron": "^43.2.0",
-    "ffi-napi": "^4.0.3",
-    "ref-napi": "^3.0.3"
+    "koffi": "^3.1.2"
   }
 }
