@@ -31,15 +31,12 @@ public final class SparkleUpdater: NSObject {
     }
 
     /// Updates the appcast URL used by Sparkle and refreshes the updater state.
-    public func setAppcastURL(_ urlString: String) -> Bool {
+    public func setAppcastURL(_ urlString: String) {
         guard let url = URL(string: urlString) else {
-            return false
+            return
         }
 
         UserDefaults.standard.set(url.absoluteString, forKey: "SUFeedURL")
-        resetUpdater()
-
-        return true
     }
 
     public func setEDDSAPublicKey(_ publicKey: String) -> Bool {
@@ -47,10 +44,9 @@ public final class SparkleUpdater: NSObject {
         return true
     }
 
-    public func setAppDetails(companyName: String, appName: String, versionString: String) -> Bool {
+    public func setAppDetails(companyName: String, appName: String, versionString: String) {
         let bundleName = "\(companyName) \(appName) v\(versionString)"
         UserDefaults.standard.set(bundleName, forKey: "SUBundleName")
-        return true
     }
 
     /// Resets the updater state during shutdown or cleanup.
