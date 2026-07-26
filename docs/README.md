@@ -5,11 +5,9 @@ Thin wrapper for Sparkle updater for macOS. This library provides a C API for in
 ## Overview
 
 libMacSparkle wraps the [Sparkle framework](https://sparkle-project.org/) to provide a simple C interface for:
-- Setting up update feeds (appcast URLs)
-- Configuring security (EDDSA public keys)
-- Setting app metadata
-- Initializing and checking for updates
-- Cleanup on application exit
+
+- Initializing updater
+- Checking for updates manually
 
 The API design is inspired by [WinSparkle](https://github.com/vslavik/winsparkle), providing a similar C interface for cross-platform applications.
 
@@ -28,19 +26,20 @@ This will generate `libMacSparkle.dylib` in the build output directory.
 The library exposes the following C functions via `mac_sparkle.h`:
 
 ### `mac_sparkle_init`
+
 ```c
 void mac_sparkle_init(void);
 ```
-Initializes the Sparkle updater. Must be called after your app's Sparkle configuration is present in `Info.plist`.
+
+Initializes the Sparkle updater. Must be called first time after UI started.
 
 ### `mac_sparkle_check_update_with_ui`
+
 ```c
 void mac_sparkle_check_update_with_ui(void);
 ```
-Triggers a manual update check with user interface feedback.
 
-- **Returns**: nothing
-- **Note**: Shows Sparkle's standard update UI to the user
+Triggers a manual update check with user interface feedback.
 
 ## Recommended Usage
 
@@ -124,7 +123,7 @@ private void OnCheckForUpdatesClicked(object sender, EventArgs e)
   }
   ```
 
-- **Library Placement**: Ensure `libMacSparkle.dylib` is in your application's bundle or in a location where the system can find it (e.g., alongside your executable or in `@rpath`).
+- **Library Placement**: Ensure `libMacSparkle.dylib` and `Sparkle.framework` are in your application's bundle or in a location where the system can find it (e.g., alongside your executable or in `@rpath`).
 
 ## Info.plist Requirements
 
@@ -138,12 +137,6 @@ Your application's `Info.plist` file must include the following entries for Spar
 - **SUFeedURL**: The URL to your appcast feed.
 - **SUPublicEDKey**: Your EdDSA public key for signature verification.
 
-### Optional Entries
-
-The following entry can also be set in `Info.plist`:
-
-- **SUBundleName**: The bundle name used for update display.
-
 ### Example Info.plist
 
 ```xml
@@ -153,6 +146,7 @@ The following entry can also be set in `Info.plist`:
 <string>1.0.0</string>
 <key>CFBundleShortVersionString</key>
 <string>1.0.0</string>
+
 <key>SUFeedURL</key>
 <string>https://example.com/updates/appcast.xml</string>
 <key>SUPublicEDKey</key>
