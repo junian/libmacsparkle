@@ -21,6 +21,34 @@ Build the library using the provided build script:
 
 This will generate `libMacSparkle.dylib` in the build output directory.
 
+## Info.plist Requirements
+
+Your application's `Info.plist` file must include the following entries for Sparkle to function correctly:
+
+### Required Entries
+
+- **CFBundleIdentifier**: Your application's unique bundle identifier (e.g., `com.yourcompany.yourapp`)
+- **CFBundleVersion**: The build version (e.g., `100` or `1.0.0`)
+- **CFBundleShortVersionString**: The display version shown to users (e.g., `1.0.0`)
+- **SUFeedURL**: The URL to your appcast feed.
+- **SUPublicEDKey**: Your EdDSA public key for signature verification.
+
+### Example Info.plist
+
+```xml
+<key>CFBundleIdentifier</key>
+<string>com.yourcompany.yourapp</string>
+<key>CFBundleVersion</key>
+<string>1.0.0</string>
+<key>CFBundleShortVersionString</key>
+<string>1.0.0</string>
+
+<key>SUFeedURL</key>
+<string>https://example.com/updates/appcast.xml</string>
+<key>SUPublicEDKey</key>
+<string>your-eddsa-public-key-here</string>
+```
+
 ## Public API
 
 The library exposes the following C functions via `mac_sparkle.h`:
@@ -124,34 +152,6 @@ private void OnCheckForUpdatesClicked(object sender, EventArgs e)
   ```
 
 - **Library Placement**: Ensure `libMacSparkle.dylib` and `Sparkle.framework` are in your application's bundle or in a location where the system can find it (e.g., alongside your executable or in `@rpath`).
-
-## Info.plist Requirements
-
-Your application's `Info.plist` file must include the following entries for Sparkle to function correctly:
-
-### Required Entries
-
-- **CFBundleIdentifier**: Your application's unique bundle identifier (e.g., `com.yourcompany.yourapp`)
-- **CFBundleVersion**: The build version (e.g., `100` or `1.0.0`)
-- **CFBundleShortVersionString**: The display version shown to users (e.g., `1.0.0`)
-- **SUFeedURL**: The URL to your appcast feed.
-- **SUPublicEDKey**: Your EdDSA public key for signature verification.
-
-### Example Info.plist
-
-```xml
-<key>CFBundleIdentifier</key>
-<string>com.yourcompany.yourapp</string>
-<key>CFBundleVersion</key>
-<string>1.0.0</string>
-<key>CFBundleShortVersionString</key>
-<string>1.0.0</string>
-
-<key>SUFeedURL</key>
-<string>https://example.com/updates/appcast.xml</string>
-<key>SUPublicEDKey</key>
-<string>your-eddsa-public-key-here</string>
-```
 
 ## Examples
 
