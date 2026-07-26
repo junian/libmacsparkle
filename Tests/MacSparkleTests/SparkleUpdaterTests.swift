@@ -53,4 +53,8 @@ final class SparkleUpdaterTests: XCTestCase {
         XCTAssertTrue(mac_sparkle_set_app_details_c(companyCString, appCString, versionCString))
         XCTAssertEqual(UserDefaults.standard.string(forKey: "SUBundleName"), "\(company) \(app) v\(version)")
     }
+
+    func testCABIEntryPointInitializesUpdater() {
+        XCTAssertTrue(mac_sparkle_init_c())
+    }
 }

@@ -77,3 +77,11 @@ public func mac_sparkle_set_app_details_c(_ companyName: UnsafePointer<CChar>?, 
     UserDefaults.standard.set(bundleName, forKey: "SUBundleName")
     return true
 }
+
+@discardableResult
+@MainActor
+@_cdecl("mac_sparkle_init")
+public func mac_sparkle_init_c() -> Bool {
+    SparkleUpdater.shared.checkForUpdates()
+    return true
+}
