@@ -3,7 +3,7 @@ import Sparkle
 
 /// Manages the shared Sparkle updater state for the library.
 @MainActor
-public final class SparkleUpdater {
+public final class SparkleUpdater: NSObject {
     /// The singleton instance used by the library.
     public static let shared = SparkleUpdater()
 
@@ -14,8 +14,22 @@ public final class SparkleUpdater {
     public private(set) var updater: SPUUpdater
 
     /// Creates the shared updater controller and stores the initial updater reference.
-    private init() {
-        self.controller = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+    private override init() {
+        self.controller = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
+        self.updater = self.controller.updater
+        super.init()
+    }
+
+    public func initialize() {
+        self.controller = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
         self.updater = self.controller.updater
     }
 
@@ -33,6 +47,17 @@ public final class SparkleUpdater {
         UserDefaults.standard.set(url.absoluteString, forKey: "SUFeedURL")
         resetUpdater()
 
+        return true
+    }
+
+    public func setEDDSAPublicKey(_ publicKey: String) -> Bool {
+        UserDefaults.standard.set(publicKey, forKey: "SUPublicEDKey")
+        return true
+    }
+
+    public func setAppDetails(companyName: String, appName: String, versionString: String) -> Bool {
+        let bundleName = "\(companyName) \(appName) v\(versionString)"
+        UserDefaults.standard.set(bundleName, forKey: "SUBundleName")
         return true
     }
 

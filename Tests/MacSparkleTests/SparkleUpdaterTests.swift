@@ -29,7 +29,7 @@ final class SparkleUpdaterTests: XCTestCase {
         let expectedURL = "https://example.com/appcast-c.xml"
         let cString = (expectedURL as NSString).utf8String
 
-        XCTAssertTrue(mac_sparkle_set_appcast_url_c(cString))
+        XCTAssertTrue(mac_sparkle_set_appcast_url(cString))
         XCTAssertEqual(UserDefaults.standard.string(forKey: "SUFeedURL"), expectedURL)
     }
 
@@ -37,7 +37,7 @@ final class SparkleUpdaterTests: XCTestCase {
         let expectedKey = "test-public-key"
         let cString = (expectedKey as NSString).utf8String
 
-        XCTAssertTrue(mac_sparkle_set_eddsa_public_key_c(cString))
+        XCTAssertTrue(mac_sparkle_set_eddsa_public_key(cString))
         XCTAssertEqual(UserDefaults.standard.string(forKey: "SUPublicEDKey"), expectedKey)
     }
 
@@ -50,19 +50,19 @@ final class SparkleUpdaterTests: XCTestCase {
         let appCString = (app as NSString).utf8String
         let versionCString = (version as NSString).utf8String
 
-        XCTAssertTrue(mac_sparkle_set_app_details_c(companyCString, appCString, versionCString))
+        XCTAssertTrue(mac_sparkle_set_app_details(companyCString, appCString, versionCString))
         XCTAssertEqual(UserDefaults.standard.string(forKey: "SUBundleName"), "\(company) \(app) v\(version)")
     }
 
     func testCABIEntryPointInitializesUpdater() {
-        XCTAssertTrue(mac_sparkle_init_c())
+        XCTAssertTrue(mac_sparkle_init())
     }
 
     func testCABIEntryPointChecksForUpdatesWithUI() {
-        XCTAssertTrue(mac_sparkle_check_update_with_ui_c())
+        XCTAssertTrue(mac_sparkle_check_update_with_ui())
     }
 
     func testCABIEntryPointCleansUpUpdater() {
-        XCTAssertTrue(mac_sparkle_cleanup_c())
+        XCTAssertTrue(mac_sparkle_cleanup())
     }
 }
