@@ -13,56 +13,15 @@ final class SparkleUpdaterTests: XCTestCase {
     func testUpdaterIsAvailable() {
         let updater = SparkleUpdater.shared
 
-        XCTAssertNotNil(updater.updater)
-    }
-
-    func testSettingAppcastURLUpdatesSparkleFeedURL() {
-        let expectedURL = "https://example.com/appcast.xml"
-
-        mac_sparkle_set_appcast_url(expectedURL)
-
-        XCTAssertEqual(UserDefaults.standard.string(forKey: "SUFeedURL"), expectedURL)
-        XCTAssertEqual(SparkleUpdater.shared.updater.feedURL?.absoluteString, expectedURL)
-    }
-
-    func testCABIEntryPointUpdatesSparkleFeedURL() {
-        let expectedURL = "https://example.com/appcast-c.xml"
-        let cString = (expectedURL as NSString).utf8String
-
-        XCTAssertTrue(mac_sparkle_set_appcast_url(cString))
-        XCTAssertEqual(UserDefaults.standard.string(forKey: "SUFeedURL"), expectedURL)
-    }
-
-    func testCABIEntryPointUpdatesEDDSAPublicKey() {
-        let expectedKey = "test-public-key"
-        let cString = (expectedKey as NSString).utf8String
-
-        XCTAssertTrue(mac_sparkle_set_eddsa_public_key(cString))
-        XCTAssertEqual(UserDefaults.standard.string(forKey: "SUPublicEDKey"), expectedKey)
-    }
-
-    func testCABIEntryPointUpdatesAppDetails() {
-        let company = "Example Company"
-        let app = "Example App"
-        let version = "1.2.3"
-
-        let companyCString = (company as NSString).utf8String
-        let appCString = (app as NSString).utf8String
-        let versionCString = (version as NSString).utf8String
-
-        XCTAssertTrue(mac_sparkle_set_app_details(companyCString, appCString, versionCString))
-        XCTAssertEqual(UserDefaults.standard.string(forKey: "SUBundleName"), "\(company) \(app) v\(version)")
+        XCTAssertNotNil(updater.controller)
     }
 
     func testCABIEntryPointInitializesUpdater() {
-        XCTAssertTrue(mac_sparkle_init())
+        XCTAssertNoThrow(mac_sparkle_init())
     }
 
     func testCABIEntryPointChecksForUpdatesWithUI() {
-        XCTAssertTrue(mac_sparkle_check_update_with_ui())
+        XCTAssertNoThrow(mac_sparkle_check_update_with_ui())
     }
 
-    func testCABIEntryPointCleansUpUpdater() {
-        XCTAssertTrue(mac_sparkle_cleanup())
-    }
 }

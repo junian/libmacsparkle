@@ -9,10 +9,8 @@ public func mac_sparkle_init() {
 }
 
 /// Invokes the manual update-check flow exposed by Sparkle.
-@discardableResult
 @MainActor
 @_cdecl("mac_sparkle_check_update_with_ui")
-public func mac_sparkle_check_update_with_ui() -> Bool {
+public func mac_sparkle_check_update_with_ui() {
     SparkleUpdater.shared.checkForUpdates()
-    return true
 }

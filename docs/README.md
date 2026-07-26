@@ -35,11 +35,11 @@ Initializes the Sparkle updater. Must be called after your app's Sparkle configu
 
 ### `mac_sparkle_check_update_with_ui`
 ```c
-bool mac_sparkle_check_update_with_ui(void);
+void mac_sparkle_check_update_with_ui(void);
 ```
 Triggers a manual update check with user interface feedback.
 
-- **Returns**: `true` on success
+- **Returns**: nothing
 - **Note**: Shows Sparkle's standard update UI to the user
 
 ## Recommended Usage
@@ -69,8 +69,7 @@ internal static class NativeMethods
     public static extern void mac_sparkle_init();
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
-    [return: MarshalAs(UnmanagedType.I1)]
-    public static extern bool mac_sparkle_check_update_with_ui();
+    public static extern void mac_sparkle_check_update_with_ui();
 }
 ```
 
@@ -159,8 +158,6 @@ The following entry can also be set in `Info.plist`:
 <key>SUPublicEDKey</key>
 <string>your-eddsa-public-key-here</string>
 ```
-
-Note: SUFeedURL and SUPublicEDKey can be set via the API functions (`mac_sparkle_set_appcast_url()` and `mac_sparkle_set_eddsa_public_key()`) instead of in Info.plist. SUBundleName is optional and can also be set via `mac_sparkle_set_app_details()`.
 
 ## Examples
 

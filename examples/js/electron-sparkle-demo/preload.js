@@ -18,7 +18,7 @@ if (process.platform === 'darwin') {
       
       // Load functions using koffi
       const mac_sparkle_init = native.func('void mac_sparkle_init()');
-      const mac_sparkle_check_update_with_ui = native.func('bool mac_sparkle_check_update_with_ui()');
+      const mac_sparkle_check_update_with_ui = native.func('void mac_sparkle_check_update_with_ui()');
 
       // Initialize Sparkle
       mac_sparkle_init();
