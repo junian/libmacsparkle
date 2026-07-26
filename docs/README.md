@@ -230,6 +230,41 @@ public class App
 
 - **Library Placement**: Ensure `libMacSparkle.dylib` is in your application's bundle or in a location where the system can find it (e.g., alongside your executable or in `@rpath`).
 
+## Info.plist Requirements
+
+Your application's `Info.plist` file must include the following entries for Sparkle to function correctly:
+
+### Required Entries
+
+- **CFBundleIdentifier**: Your application's unique bundle identifier (e.g., `com.yourcompany.yourapp`)
+- **CFBundleVersion**: The build version (e.g., `100` or `1.0.0`)
+- **CFBundleShortVersionString**: The display version shown to users (e.g., `1.0.0`)
+- **SUFeedURL**: The URL to your appcast feed. Can be set via `mac_sparkle_set_appcast_url()` instead.
+- **SUPublicEDKey**: Your EdDSA public key for signature verification. Can be set via `mac_sparkle_set_eddsa_public_key()` instead.
+
+### Optional Entries (Can be set via API)
+
+The following entry can be set either in `Info.plist` or via the MacSparkle API:
+
+- **SUBundleName**: The bundle name used for update display. If set via `mac_sparkle_set_app_details()`, this entry is not required.
+
+### Example Info.plist
+
+```xml
+<key>CFBundleIdentifier</key>
+<string>com.yourcompany.yourapp</string>
+<key>CFBundleVersion</key>
+<string>1.0.0</string>
+<key>CFBundleShortVersionString</key>
+<string>1.0.0</string>
+<key>SUFeedURL</key>
+<string>https://example.com/updates/appcast.xml</string>
+<key>SUPublicEDKey</key>
+<string>your-eddsa-public-key-here</string>
+```
+
+Note: SUFeedURL and SUPublicEDKey can be set via the API functions (`mac_sparkle_set_appcast_url()` and `mac_sparkle_set_eddsa_public_key()`) instead of in Info.plist. SUBundleName is optional and can also be set via `mac_sparkle_set_app_details()`.
+
 ## Examples
 
 See the `examples/csharp` directory for complete working examples:
