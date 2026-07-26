@@ -12,4 +12,19 @@
     -->
     <TrimMode Condition="'$(Configuration)' == 'Release'">full</TrimMode>
   </PropertyGroup>
+
+  <!-- Copy built libMacSparkle.dylib from repository .build/release into output -->
+  <ItemGroup>
+    <None Include="../../../.build/release/libMacSparkle.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Copy Sparkle.framework into output so the runtime can load it -->
+  <ItemGroup>
+    <None Include="../../../.build/release/Sparkle.framework/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Sparkle.framework\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
 </Project>
