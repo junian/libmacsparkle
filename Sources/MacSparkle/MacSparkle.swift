@@ -2,16 +2,15 @@ import Foundation
 import Sparkle
 
 /// Sets the appcast URL for Sparkle from a C string passed by a native caller.
-@discardableResult
 @MainActor
 @_cdecl("mac_sparkle_set_appcast_url")
-public func mac_sparkle_set_appcast_url(_ urlString: UnsafePointer<CChar>?) -> Bool {
+public func mac_sparkle_set_appcast_url(_ urlString: UnsafePointer<CChar>?) {
     guard let urlString else {
-        return false
+        return
     }
 
     let value = String(cString: urlString)
-    return SparkleUpdater.shared.setAppcastURL(value)
+    SparkleUpdater.shared.setAppcastURL(value)
 }
 
 /// Stores the EDDSA public key used by Sparkle in UserDefaults.
@@ -28,27 +27,24 @@ public func mac_sparkle_set_eddsa_public_key(_ publicKey: UnsafePointer<CChar>?)
 }
 
 /// Stores the app details as a combined bundle name string for Sparkle.
-@discardableResult
 @MainActor
 @_cdecl("mac_sparkle_set_app_details")
-public func mac_sparkle_set_app_details(_ companyName: UnsafePointer<CChar>?, _ appName: UnsafePointer<CChar>?, _ versionString: UnsafePointer<CChar>?) -> Bool {
+public func mac_sparkle_set_app_details(_ companyName: UnsafePointer<CChar>?, _ appName: UnsafePointer<CChar>?, _ versionString: UnsafePointer<CChar>?) {
     guard let companyName, let appName, let versionString else {
-        return false
+        return
     }
 
     let company = String(cString: companyName)
     let app = String(cString: appName)
     let version = String(cString: versionString)
-    return SparkleUpdater.shared.setAppDetails(companyName: company, appName: app, versionString: version)
+    SparkleUpdater.shared.setAppDetails(companyName: company, appName: app, versionString: version)
 }
 
 /// Initializes the Sparkle updater so it can be used on first launch.
-@discardableResult
 @MainActor
 @_cdecl("mac_sparkle_init")
-public func mac_sparkle_init() -> Bool {
+public func mac_sparkle_init() {
     SparkleUpdater.shared.initialize()
-    return true
 }
 
 /// Invokes the manual update-check flow exposed by Sparkle.
@@ -61,10 +57,8 @@ public func mac_sparkle_check_update_with_ui() -> Bool {
 }
 
 /// Cleans up the updater state before the application exits.
-@discardableResult
 @MainActor
 @_cdecl("mac_sparkle_cleanup")
-public func mac_sparkle_cleanup() -> Bool {
+public func mac_sparkle_cleanup() {
     SparkleUpdater.shared.cleanup()
-    return true
 }

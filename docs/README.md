@@ -11,6 +11,8 @@ libMacSparkle wraps the [Sparkle framework](https://sparkle-project.org/) to pro
 - Initializing and checking for updates
 - Cleanup on application exit
 
+The API design is inspired by [WinSparkle](https://github.com/vslavik/winsparkle), providing a similar C interface for cross-platform applications.
+
 ## Building
 
 Build the library using the provided build script:
@@ -29,12 +31,11 @@ The library exposes the following C functions via `mac_sparkle.h`:
 
 #### `mac_sparkle_set_appcast_url`
 ```c
-bool mac_sparkle_set_appcast_url(const char *urlString);
+void mac_sparkle_set_appcast_url(const char *urlString);
 ```
 Sets the URL of the Sparkle appcast feed that contains update information.
 
 - **Parameters**: `urlString` - The URL to the appcast XML feed
-- **Returns**: `true` on success, `false` if the URL is invalid or null
 - **Note**: Must be called before `mac_sparkle_init()`
 
 #### `mac_sparkle_set_eddsa_public_key`
@@ -49,7 +50,7 @@ Sets the EdDSA public key used to verify update signatures for security.
 
 #### `mac_sparkle_set_app_details`
 ```c
-bool mac_sparkle_set_app_details(const char *companyName, const char *appName, const char *versionString);
+void mac_sparkle_set_app_details(const char *companyName, const char *appName, const char *versionString);
 ```
 Sets application metadata used by Sparkle for update display.
 
@@ -57,18 +58,16 @@ Sets application metadata used by Sparkle for update display.
   - `companyName` - The company/organization name
   - `appName` - The application name
   - `versionString` - The current version string
-- **Returns**: `true` on success, `false` if any parameter is null
 - **Note**: Must be called before `mac_sparkle_init()`
 
 ### Lifecycle Functions
 
 #### `mac_sparkle_init`
 ```c
-bool mac_sparkle_init(void);
+void mac_sparkle_init(void);
 ```
 Initializes the Sparkle updater. Must be called after configuration functions.
 
-- **Returns**: `true` on success
 - **Note**: This starts the updater and enables automatic update checks
 
 #### `mac_sparkle_check_update_with_ui`
@@ -82,11 +81,10 @@ Triggers a manual update check with user interface feedback.
 
 #### `mac_sparkle_cleanup`
 ```c
-bool mac_sparkle_cleanup(void);
+void mac_sparkle_cleanup(void);
 ```
 Cleans up the updater state. Should be called before application exit.
 
-- **Returns**: `true` on success
 - **Note**: Resets the updater controller and clears state
 
 ## Recommended Usage Order
@@ -122,8 +120,7 @@ internal static class NativeMethods
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_set_appcast_url", 
                CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.I1)]
-    public static extern bool mac_sparkle_set_appcast_url([MarshalAs(UnmanagedType.LPStr)] string url);
+    public static extern void mac_sparkle_set_appcast_url([MarshalAs(UnmanagedType.LPStr)] string url);
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_set_eddsa_public_key", 
                CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
@@ -132,16 +129,14 @@ internal static class NativeMethods
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_set_app_details", 
                CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.I1)]
-    public static extern bool mac_sparkle_set_app_details(
+    public static extern void mac_sparkle_set_app_details(
         [MarshalAs(UnmanagedType.LPStr)] string companyName,
         [MarshalAs(UnmanagedType.LPStr)] string appName,
         [MarshalAs(UnmanagedType.LPStr)] string versionString);
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_init", 
                CallingConvention = CallingConvention.Cdecl)]
-    [return: MarshalAs(UnmanagedType.I1)]
-    public static extern bool mac_sparkle_init();
+    public static extern void mac_sparkle_init();
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", 
                CallingConvention = CallingConvention.Cdecl)]
@@ -150,8 +145,7 @@ internal static class NativeMethods
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_cleanup", 
                CallingConvention = CallingConvention.Cdecl)]
-    [return: MarshalAs(UnmanagedType.I1)]
-    public static extern bool mac_sparkle_cleanup();
+    public static extern void mac_sparkle_cleanup();
 }
 ```
 
