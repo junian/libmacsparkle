@@ -24,4 +24,12 @@ final class SparkleUpdaterTests: XCTestCase {
         XCTAssertEqual(UserDefaults.standard.string(forKey: "SUFeedURL"), expectedURL)
         XCTAssertEqual(SparkleUpdater.shared.updater.feedURL?.absoluteString, expectedURL)
     }
+
+    func testCABIEntryPointUpdatesSparkleFeedURL() {
+        let expectedURL = "https://example.com/appcast-c.xml"
+        let cString = (expectedURL as NSString).utf8String
+
+        XCTAssertTrue(mac_sparkle_set_appcast_url_c(cString))
+        XCTAssertEqual(UserDefaults.standard.string(forKey: "SUFeedURL"), expectedURL)
+    }
 }

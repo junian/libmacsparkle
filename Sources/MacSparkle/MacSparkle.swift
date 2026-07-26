@@ -35,3 +35,15 @@ public final class SparkleUpdater {
 public func mac_sparkle_set_appcast_url(_ urlString: String) -> Bool {
     SparkleUpdater.shared.setAppcastURL(urlString)
 }
+
+@discardableResult
+@MainActor
+@_cdecl("mac_sparkle_set_appcast_url")
+public func mac_sparkle_set_appcast_url_c(_ urlString: UnsafePointer<CChar>?) -> Bool {
+    guard let urlString else {
+        return false
+    }
+
+    let value = String(cString: urlString)
+    return SparkleUpdater.shared.setAppcastURL(value)
+}
