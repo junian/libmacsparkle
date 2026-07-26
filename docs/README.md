@@ -27,50 +27,13 @@ This will generate `libMacSparkle.dylib` in the build output directory.
 
 The library exposes the following C functions via `mac_sparkle.h`:
 
-### Configuration Functions
-
-#### `mac_sparkle_set_appcast_url`
-```c
-void mac_sparkle_set_appcast_url(const char *urlString);
-```
-Sets the URL of the Sparkle appcast feed that contains update information.
-
-- **Parameters**: `urlString` - The URL to the appcast XML feed
-- **Note**: Must be called before `mac_sparkle_init()`
-
-#### `mac_sparkle_set_eddsa_public_key`
-```c
-bool mac_sparkle_set_eddsa_public_key(const char *publicKey);
-```
-Sets the EdDSA public key used to verify update signatures for security.
-
-- **Parameters**: `publicKey` - The EdDSA public key string
-- **Returns**: `true` on success, `false` if the key is null
-- **Note**: Must be called before `mac_sparkle_init()`
-
-#### `mac_sparkle_set_app_details`
-```c
-void mac_sparkle_set_app_details(const char *companyName, const char *appName, const char *versionString);
-```
-Sets application metadata used by Sparkle for update display.
-
-- **Parameters**:
-  - `companyName` - The company/organization name
-  - `appName` - The application name
-  - `versionString` - The current version string
-- **Note**: Must be called before `mac_sparkle_init()`
-
-### Lifecycle Functions
-
-#### `mac_sparkle_init`
+### `mac_sparkle_init`
 ```c
 void mac_sparkle_init(void);
 ```
-Initializes the Sparkle updater. Must be called after configuration functions.
+Initializes the Sparkle updater. Must be called after your app's Sparkle configuration is present in `Info.plist`.
 
-- **Note**: This starts the updater and enables automatic update checks
-
-#### `mac_sparkle_check_update_with_ui`
+### `mac_sparkle_check_update_with_ui`
 ```c
 bool mac_sparkle_check_update_with_ui(void);
 ```
@@ -79,31 +42,15 @@ Triggers a manual update check with user interface feedback.
 - **Returns**: `true` on success
 - **Note**: Shows Sparkle's standard update UI to the user
 
-#### `mac_sparkle_cleanup`
-```c
-void mac_sparkle_cleanup(void);
-```
-Cleans up the updater state. Should be called before application exit.
+## Recommended Usage
 
-- **Note**: Resets the updater controller and clears state
+The library is configured through your application's `Info.plist`. The available API functions should be used in this order:
 
-## Recommended Usage Order
+1. **Initialization**:
+   - `mac_sparkle_init()` - Initialize the updater after `Info.plist` configuration is in place
 
-The API functions should be called in the following order:
-
-1. **Configuration Phase** (on application startup):
-   - `mac_sparkle_set_appcast_url()` - Set your appcast feed URL
-   - `mac_sparkle_set_eddsa_public_key()` - Set your public key for signature verification
-   - `mac_sparkle_set_app_details()` - Set company name, app name, and version
-
-2. **Initialization**:
-   - `mac_sparkle_init()` - Initialize the updater
-
-3. **Runtime** (as needed):
+2. **Runtime** (as needed):
    - `mac_sparkle_check_update_with_ui()` - Trigger manual update checks (e.g., from a "Check for Updates" menu item)
-
-4. **Cleanup** (on application exit):
-   - `mac_sparkle_cleanup()` - Clean up updater state
 
 ## C# Usage Example
 
@@ -118,57 +65,30 @@ internal static class NativeMethods
 {
     private const string LIB = "libMacSparkle.dylib";
 
-    [DllImport(LIB, EntryPoint = "mac_sparkle_set_appcast_url", 
-               CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    public static extern void mac_sparkle_set_appcast_url([MarshalAs(UnmanagedType.LPStr)] string url);
-
-    [DllImport(LIB, EntryPoint = "mac_sparkle_set_eddsa_public_key", 
-               CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.I1)]
-    public static extern bool mac_sparkle_set_eddsa_public_key([MarshalAs(UnmanagedType.LPStr)] string key);
-
-    [DllImport(LIB, EntryPoint = "mac_sparkle_set_app_details", 
-               CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    public static extern void mac_sparkle_set_app_details(
-        [MarshalAs(UnmanagedType.LPStr)] string companyName,
-        [MarshalAs(UnmanagedType.LPStr)] string appName,
-        [MarshalAs(UnmanagedType.LPStr)] string versionString);
-
-    [DllImport(LIB, EntryPoint = "mac_sparkle_init", 
-               CallingConvention = CallingConvention.Cdecl)]
+    [DllImport(LIB, EntryPoint = "mac_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_init();
 
-    [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", 
-               CallingConvention = CallingConvention.Cdecl)]
+    [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
     [return: MarshalAs(UnmanagedType.I1)]
     public static extern bool mac_sparkle_check_update_with_ui();
-
-    [DllImport(LIB, EntryPoint = "mac_sparkle_cleanup", 
-               CallingConvention = CallingConvention.Cdecl)]
-    public static extern void mac_sparkle_cleanup();
 }
 ```
 
 ### Step 2: Initialize on Application Startup
 
-Call the configuration and initialization functions when your application starts:
+Call `mac_sparkle_init()` when your application starts:
 
 ```csharp
 public class App
 {
     public static void Main(string[] args)
     {
-        // Configure Sparkle on app startup
         try
         {
-            NativeMethods.mac_sparkle_set_appcast_url("https://example.com/updates/appcast.xml");
-            NativeMethods.mac_sparkle_set_eddsa_public_key("your-eddsa-public-key-here");
-            NativeMethods.mac_sparkle_set_app_details("Your Company", "Your App", "1.0.0");
             NativeMethods.mac_sparkle_init();
         }
         catch (Exception ex)
         {
-            // Handle interop errors (e.g., library not found on non-macOS platforms)
             Console.WriteLine($"Failed to initialize Sparkle: {ex.Message}");
         }
 
@@ -195,29 +115,6 @@ private void OnCheckForUpdatesClicked(object sender, EventArgs e)
 }
 ```
 
-### Step 4: Cleanup on Application Exit
-
-Clean up the updater when your application exits:
-
-```csharp
-public class App
-{
-    protected override void OnExit()
-    {
-        try
-        {
-            NativeMethods.mac_sparkle_cleanup();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to cleanup Sparkle: {ex.Message}");
-        }
-        
-        base.OnExit();
-    }
-}
-```
-
 ## Platform Considerations
 
 - **macOS Only**: This library only works on macOS. Ensure you guard calls with platform checks:
@@ -239,14 +136,14 @@ Your application's `Info.plist` file must include the following entries for Spar
 - **CFBundleIdentifier**: Your application's unique bundle identifier (e.g., `com.yourcompany.yourapp`)
 - **CFBundleVersion**: The build version (e.g., `100` or `1.0.0`)
 - **CFBundleShortVersionString**: The display version shown to users (e.g., `1.0.0`)
-- **SUFeedURL**: The URL to your appcast feed. Can be set via `mac_sparkle_set_appcast_url()` instead.
-- **SUPublicEDKey**: Your EdDSA public key for signature verification. Can be set via `mac_sparkle_set_eddsa_public_key()` instead.
+- **SUFeedURL**: The URL to your appcast feed.
+- **SUPublicEDKey**: Your EdDSA public key for signature verification.
 
-### Optional Entries (Can be set via API)
+### Optional Entries
 
-The following entry can be set either in `Info.plist` or via the MacSparkle API:
+The following entry can also be set in `Info.plist`:
 
-- **SUBundleName**: The bundle name used for update display. If set via `mac_sparkle_set_app_details()`, this entry is not required.
+- **SUBundleName**: The bundle name used for update display.
 
 ### Example Info.plist
 

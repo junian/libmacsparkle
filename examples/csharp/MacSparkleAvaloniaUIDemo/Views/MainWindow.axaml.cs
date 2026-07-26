@@ -11,7 +11,6 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         this.Opened += OnOpened;
-        this.Closed += OnClosed;
 
         var btn = this.FindControl<Button>("CheckButton");
         if (btn != null)
@@ -22,12 +21,8 @@ public partial class MainWindow : Window
 
     private void OnOpened(object? sender, EventArgs e)
     {
-        // Configure Sparkle on app load
         try
         {
-            NativeMethods.mac_sparkle_set_appcast_url("https://sparkle-project.org/files/sparkletestcast.xml");
-            NativeMethods.mac_sparkle_set_eddsa_public_key("test-public-key");
-            NativeMethods.mac_sparkle_set_app_details("Example Company", "Example App", "1.2.3");
             NativeMethods.mac_sparkle_init();
         }
         catch
@@ -41,17 +36,6 @@ public partial class MainWindow : Window
         try
         {
             NativeMethods.mac_sparkle_check_update_with_ui();
-        }
-        catch
-        {
-        }
-    }
-
-    private void OnClosed(object? sender, EventArgs e)
-    {
-        try
-        {
-            NativeMethods.mac_sparkle_cleanup();
         }
         catch
         {

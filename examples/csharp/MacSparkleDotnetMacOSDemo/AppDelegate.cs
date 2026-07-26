@@ -5,9 +5,6 @@ public class AppDelegate : NSApplicationDelegate {
 	public override void DidFinishLaunching (NSNotification notification)
 	{
 		try {
-			NativeMethods.mac_sparkle_set_appcast_url("https://sparkle-project.org/files/sparkletestcast.xml");
-			NativeMethods.mac_sparkle_set_eddsa_public_key("test-public-key");
-			NativeMethods.mac_sparkle_set_app_details("Example Company", "Example App", "1.2.3");
 			NativeMethods.mac_sparkle_init();
 		}
 		catch {
@@ -17,11 +14,6 @@ public class AppDelegate : NSApplicationDelegate {
 
 	public override void WillTerminate (NSNotification notification)
 	{
-		try {
-			NativeMethods.mac_sparkle_cleanup();
-		}
-		catch {
-			// Swallow interop errors for the demo.
-		}
+		// No cleanup API is available in the current MacSparkle export.
 	}
 }
