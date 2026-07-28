@@ -59,6 +59,14 @@ Your application's `Info.plist` file must include the following entries for Spar
 
 The library exposes the following C functions via `mac_sparkle.h`:
 
+### `mac_sparkle_set_appcast_url`
+
+```c
+void mac_sparkle_set_appcast_url(const char* url);
+```
+
+Sets the appcast URL for Sparkle. This allows you to programmatically set the feed URL instead of relying on `Info.plist`. Must be called before `mac_sparkle_init`.
+
 ### `mac_sparkle_init`
 
 ```c
@@ -100,6 +108,9 @@ internal static class NativeMethods
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_init();
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_appcast_url", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_set_appcast_url([MarshalAs(UnmanagedType.LPStr)] string url);
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_check_update_with_ui();
