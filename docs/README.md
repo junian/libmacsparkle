@@ -1,6 +1,15 @@
+<div align="center">
+
 # libMacSparkle
 
 Thin wrapper for Sparkle updater for macOS. This library provides a C API for integrating Sparkle's automatic update functionality into cross-platform applications (e.g., .NET, Rust, Go, etc.) on macOS.
+
+[![libMacSparkle on GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white&style=for-the-badge)][github]
+[![Download Latest libMacSparkle dylib](https://img.shields.io/github/release/junian/libmacsparkle.svg?style=for-the-badge)][download-latest]
+[![Download Latest libMacSparkle dylib](https://img.shields.io/github/downloads/junian/libmacsparkle/total.svg?style=for-the-badge)][download-latest]
+[![Buy me a coffee](https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-FFDD00?logo=buymeacoffee&style=for-the-badge "Buy me a coffee")](https://www.junian.dev/coffee/)
+
+</div>
 
 ## Overview
 
@@ -191,3 +200,6 @@ See the `examples/csharp` directory for complete working examples:
 ## License
 
 See [LICENSE](https://github.com/junian/libmacsparkle/blob/master/LICENSE) file for details.
+
+[github]: https://github.com/junian/libmacsparkle "libMacSparkle on GitHub"
+[download-latest]: https://github.com/junian/libmacsparkle/releases/latest "Download latest libMacSparkle.dylib"
