@@ -1,6 +1,6 @@
 # libMacSparkle
 
-Thin wrapper for Sparkle updater for macOS. This library provides a C API for integrating Sparkle's automatic update functionality into cross-platform applications (e.g., .NET, C++, etc.) on macOS.
+Thin wrapper for Sparkle updater for macOS. This library provides a C API for integrating Sparkle's automatic update functionality into cross-platform applications (e.g., .NET, Rust, Go, etc.) on macOS.
 
 ## Overview
 
@@ -11,27 +11,20 @@ libMacSparkle wraps the [Sparkle framework](https://sparkle-project.org/) to pro
 
 The API design is inspired by [WinSparkle](https://github.com/vslavik/winsparkle), providing a similar C interface for cross-platform applications.
 
-## Building
+## Quickstart
 
-Install dependencies.
+### Step 1: Download Dependencies
 
-```bash
-swift package resolve
-```
+1. Download **Sparkle.framework** from the [official Sparkle website](https://sparkle-project.org/)
+2. Download the latest **libMacSparkle** zip file from [latest GitHub Releases](https://github.com/junian/libmacsparkle/releases/latest/)
 
-Build the library using the provided build script:
+Extract both and place them in your application's bundle or alongside your executable.
 
-```bash
-./build.sh
-```
-
-This will generate `libMacSparkle.dylib` in the build output directory.
-
-## Info.plist Requirements
+### Step 2: Configure Info.plist
 
 Your application's `Info.plist` file must include the following entries for Sparkle to function correctly:
 
-### Required Entries
+**Required Entries:**
 
 - **CFBundleIdentifier**: Your application's unique bundle identifier (e.g., `com.yourcompany.yourapp`)
 - **CFBundleVersion**: The build version (e.g., `100` or `1.0.0`)
@@ -39,7 +32,7 @@ Your application's `Info.plist` file must include the following entries for Spar
 - **SUFeedURL**: The URL to your appcast feed.
 - **SUPublicEDKey**: Your EdDSA public key for signature verification.
 
-### Example Info.plist
+**Example Info.plist:**
 
 ```xml
 <key>CFBundleIdentifier</key>
@@ -54,6 +47,100 @@ Your application's `Info.plist` file must include the following entries for Spar
 <key>SUPublicEDKey</key>
 <string>your-eddsa-public-key-here</string>
 ```
+
+### Step 3: Create a Wrapper Class (C# Example)
+
+Create a wrapper class to handle P/Invoke calls and initialization:
+
+```csharp
+using System.Runtime.InteropServices;
+
+internal static class MacSparkleWrapper
+{
+    private const string LIB = "libMacSparkle.dylib";
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_appcast_url", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_set_appcast_url([MarshalAs(UnmanagedType.LPStr)] string url);
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_init();
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_check_update_with_ui();
+
+    public static void Initialize(string appcastUrl)
+    {
+        mac_sparkle_set_appcast_url(appcastUrl);
+        mac_sparkle_init();
+    }
+
+    public static void CheckForUpdates()
+    {
+        mac_sparkle_check_update_with_ui();
+    }
+}
+```
+
+### Step 4: Initialize on Application Startup
+
+```csharp
+public class App
+{
+    public static void Main(string[] args)
+    {
+        if (OperatingSystem.IsMacOS())
+        {
+            try
+            {
+                MacSparkleWrapper.Initialize("https://example.com/updates/appcast.xml");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to initialize Sparkle: {ex.Message}");
+            }
+        }
+
+        // Continue with your application startup...
+    }
+}
+```
+
+### Step 5: Check for Updates (Optional)
+
+Add a "Check for Updates" menu item or button:
+
+```csharp
+private void OnCheckForUpdatesClicked(object sender, EventArgs e)
+{
+    if (OperatingSystem.IsMacOS())
+    {
+        try
+        {
+            MacSparkleWrapper.CheckForUpdates();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to check for updates: {ex.Message}");
+        }
+    }
+}
+```
+
+## Development
+
+Install dependencies.
+
+```bash
+swift package resolve
+```
+
+Build the library using the provided build script:
+
+```bash
+./build.sh
+```
+
+This will generate `libMacSparkle.dylib` in the `.build/universal/release` directory.
 
 ## Public API
 
@@ -83,81 +170,6 @@ void mac_sparkle_check_update_with_ui(void);
 
 Triggers a manual update check with user interface feedback.
 
-## Recommended Usage
-
-The library is configured through your application's `Info.plist`. The available API functions should be used in this order:
-
-1. **Initialization**:
-   - `mac_sparkle_init()` - Initialize the updater after `Info.plist` configuration is in place
-
-2. **Runtime** (as needed):
-   - `mac_sparkle_check_update_with_ui()` - Trigger manual update checks (e.g., from a "Check for Updates" menu item)
-
-## C# Usage Example
-
-### Step 1: Define P/Invoke Declarations
-
-Create a `NativeMethods.cs` file to import the C functions:
-
-```csharp
-using System.Runtime.InteropServices;
-
-internal static class NativeMethods
-{
-    private const string LIB = "libMacSparkle.dylib";
-
-    [DllImport(LIB, EntryPoint = "mac_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void mac_sparkle_init();
-
-    [DllImport(LIB, EntryPoint = "mac_sparkle_set_appcast_url", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void mac_sparkle_set_appcast_url([MarshalAs(UnmanagedType.LPStr)] string url);
-
-    [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void mac_sparkle_check_update_with_ui();
-}
-```
-
-### Step 2: Initialize on Application Startup
-
-Call `mac_sparkle_init()` when your application starts:
-
-```csharp
-public class App
-{
-    public static void Main(string[] args)
-    {
-        try
-        {
-            NativeMethods.mac_sparkle_init();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to initialize Sparkle: {ex.Message}");
-        }
-
-        // Continue with your application startup...
-    }
-}
-```
-
-### Step 3: Check for Updates (Optional)
-
-Add a "Check for Updates" menu item or button:
-
-```csharp
-private void OnCheckForUpdatesClicked(object sender, EventArgs e)
-{
-    try
-    {
-        NativeMethods.mac_sparkle_check_update_with_ui();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Failed to check for updates: {ex.Message}");
-    }
-}
-```
-
 ## Platform Considerations
 
 - **macOS Only**: This library only works on macOS. Ensure you guard calls with platform checks:
@@ -178,4 +190,4 @@ See the `examples/csharp` directory for complete working examples:
 
 ## License
 
-See LICENSE file for details.
+See [LICENSE](https://github.com/junian/libmacsparkle/blob/master/LICENSE) file for details.
