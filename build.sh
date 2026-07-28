@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
-OUTPUT_DIR="$ROOT_DIR/.build/release"
+OUTPUT_DIR="$ROOT_DIR/.build/universal/release"
 mkdir -p "$OUTPUT_DIR"
 
 # Extract version from Package.swift
@@ -21,6 +21,9 @@ swift build -c release --arch arm64
 
 echo "Creating universal dylib..."
 lipo -create "$X64_DYLIB" "$ARM64_DYLIB" -output "$UNIVERSAL_DYLIB"
+
+echo "Copying Sparkle.framework..."
+cp -R "$ROOT_DIR/.build/release/Sparkle.framework" "$OUTPUT_DIR/."
 
 echo "Signing universal dylib..."
 codesign --force --sign - "$UNIVERSAL_DYLIB"
