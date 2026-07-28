@@ -6,6 +6,9 @@ internal static class NativeMethods
 {
     private const string LIB = "libMacSparkle.dylib";
 
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_appcast_url", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+    public static extern bool mac_sparkle_set_appcast_url([MarshalAs(UnmanagedType.LPStr)] string url);
+    
     [DllImport(LIB, EntryPoint = "mac_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_init();
 

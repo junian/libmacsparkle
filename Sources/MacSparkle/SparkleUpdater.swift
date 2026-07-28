@@ -4,12 +4,13 @@ import Sparkle
 
 /// Manages the shared Sparkle updater state for the library.
 @MainActor
-public final class SparkleUpdater: NSObject {
+public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
     /// The singleton instance used by the library.
     public static let shared = SparkleUpdater()
 
     /// The underlying updater controller instance.
-    public private(set) var controller: SPUStandardUpdaterController
+    private var controller: SPUStandardUpdaterController?
+    private var appCastURL: String?
 
     /// Creates the shared updater controller and stores the initial updater reference.
     private override init() {
@@ -18,15 +19,28 @@ public final class SparkleUpdater: NSObject {
             updaterDelegate: nil,
             userDriverDelegate: nil
         )
+        self.appCastURL = nil
+    }
+    
+    public func setAppcastURL(_ url: String) {
+        self.appCastURL = url
+        self.controller = SPUStandardUpdaterController(
+            startingUpdater: false,
+            updaterDelegate: self,
+            userDriverDelegate: nil
+        )
     }
 
     public func initialize() {
-         controller.startUpdater()
-        
+         controller?.startUpdater()
     }
 
     /// Triggers Sparkle to check for updates.
     public func checkForUpdates() {
-        controller.checkForUpdates(nil)
+        controller?.checkForUpdates(nil)
+    }
+    
+    public func feedURLString(for updater: SPUUpdater) -> String? {
+        return appCastURL;
     }
 }

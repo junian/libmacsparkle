@@ -23,6 +23,7 @@ public partial class MainWindow : Window
     {
         try
         {
+            NativeMethods.mac_sparkle_set_appcast_url("https://sparkle-project.org/files/sparkletestcast.xml");
             NativeMethods.mac_sparkle_init();
         }
         catch

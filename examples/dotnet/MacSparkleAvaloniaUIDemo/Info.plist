@@ -15,7 +15,7 @@
 
   <!-- Sparkle keys -->
   <key>SUFeedURL</key>
-  <string>https://sparkle-project.org/files/sparkletestcast.xml</string>
+  <string>https://example.com/files/sparkletestcast.xml</string>
   <key>SUEnableAutomaticChecks</key>
   <true/>
   <key>SUPublicEDKey</key>

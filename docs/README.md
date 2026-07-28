@@ -13,6 +13,12 @@ The API design is inspired by [WinSparkle](https://github.com/vslavik/winsparkle
 
 ## Building
 
+Install dependencies.
+
+```bash
+swift package resolve
+```
+
 Build the library using the provided build script:
 
 ```bash

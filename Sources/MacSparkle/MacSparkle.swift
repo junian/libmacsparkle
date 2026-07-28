@@ -1,6 +1,18 @@
 import Foundation
 import Sparkle
 
+/// Sets the appcast URL for Sparkle from a C string passed by a native caller.
+@MainActor
+@_cdecl("mac_sparkle_set_appcast_url")
+public func mac_sparkle_set_appcast_url(_ urlString: UnsafePointer<CChar>?) {
+    guard let urlString else {
+        return
+    }
+
+    let value = String(cString: urlString)
+    SparkleUpdater.shared.setAppcastURL(value)
+}
+
 /// Initializes the Sparkle updater so it can be used on first launch.
 @MainActor
 @_cdecl("mac_sparkle_init")
