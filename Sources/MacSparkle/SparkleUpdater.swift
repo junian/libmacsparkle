@@ -14,9 +14,11 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
 
     /// Creates the shared updater controller and stores the initial updater reference.
     private override init() {
+        super.init()
+        
         self.controller = SPUStandardUpdaterController(
             startingUpdater: false,
-            updaterDelegate: nil,
+            updaterDelegate: self,
             userDriverDelegate: nil
         )
         self.appCastURL = nil
@@ -24,11 +26,6 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
     
     public func setAppcastURL(_ url: String) {
         self.appCastURL = url
-        self.controller = SPUStandardUpdaterController(
-            startingUpdater: false,
-            updaterDelegate: self,
-            userDriverDelegate: nil
-        )
     }
 
     public func initialize() {
