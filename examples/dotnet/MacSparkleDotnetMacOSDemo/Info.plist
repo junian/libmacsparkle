@@ -26,5 +26,13 @@
 	<string>Main</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
+
+	<!-- Sparkle keys -->
+	<key>SUFeedURL</key>
+	<string>https://example.com/files/sparkletestcast.xml</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUPublicEDKey</key>
+	<string>pfIShU4dEXqPd5ObYNfDBiQWcXozk7estwzTnF9BamQ=</string>
 </dict>
 </plist>
