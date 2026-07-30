@@ -116,16 +116,13 @@ public class App
 {
     public static void Main(string[] args)
     {
-        if (OperatingSystem.IsMacOS())
+        try
         {
-            try
-            {
-                MacSparkleWrapper.Initialize("https://example.com/updates/appcast.xml");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to initialize Sparkle: {ex.Message}");
-            }
+            MacSparkleWrapper.Initialize("https://example.com/updates/appcast.xml");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to initialize Sparkle: {ex.Message}");
         }
 
         // Continue with your application startup...
@@ -140,78 +137,63 @@ You can configure automatic update checking and intervals:
 ```csharp
 public static void SetAutomaticUpdates(bool enabled)
 {
-    if (OperatingSystem.IsMacOS())
+    try
     {
-        try
-        {
-            mac_sparkle_set_automatic_check_for_updates(enabled ? 1 : 0);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to set automatic updates: {ex.Message}");
-        }
+        mac_sparkle_set_automatic_check_for_updates(enabled ? 1 : 0);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to set automatic updates: {ex.Message}");
     }
 }
 
 public static bool GetAutomaticUpdates()
 {
-    if (OperatingSystem.IsMacOS())
+    try
     {
-        try
-        {
-            return mac_sparkle_get_automatic_check_for_updates() == 1;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to get automatic updates state: {ex.Message}");
-        }
+        return mac_sparkle_get_automatic_check_for_updates() == 1;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to get automatic updates state: {ex.Message}");
     }
     return false;
 }
 
 public static void SetUpdateCheckInterval(int seconds)
 {
-    if (OperatingSystem.IsMacOS())
+    try
     {
-        try
-        {
-            mac_sparkle_set_update_check_interval(seconds);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to set update interval: {ex.Message}");
-        }
+        mac_sparkle_set_update_check_interval(seconds);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to set update interval: {ex.Message}");
     }
 }
 
 public static int GetUpdateCheckInterval()
 {
-    if (OperatingSystem.IsMacOS())
+    try
     {
-        try
-        {
-            return mac_sparkle_get_update_check_interval();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to get update interval: {ex.Message}");
-        }
+        return mac_sparkle_get_update_check_interval();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to get update interval: {ex.Message}");
     }
     return 86400; // Default 24 hours
 }
 
 public static long GetLastCheckTime()
 {
-    if (OperatingSystem.IsMacOS())
+    try
     {
-        try
-        {
-            return mac_sparkle_get_last_check_time();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to get last check time: {ex.Message}");
-        }
+        return mac_sparkle_get_last_check_time();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to get last check time: {ex.Message}");
     }
     return -1;
 }
@@ -224,16 +206,13 @@ Add a "Check for Updates" menu item or button:
 ```csharp
 private void OnCheckForUpdatesClicked(object sender, EventArgs e)
 {
-    if (OperatingSystem.IsMacOS())
+    try
     {
-        try
-        {
-            MacSparkleWrapper.CheckForUpdates();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to check for updates: {ex.Message}");
-        }
+        MacSparkleWrapper.CheckForUpdates();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to check for updates: {ex.Message}");
     }
 }
 ```
@@ -324,13 +303,7 @@ Gets the last update check time as a Unix timestamp. Returns `-1` if updates hav
 
 ## Platform Considerations
 
-- **macOS Only**: This library only works on macOS. Ensure you guard calls with platform checks:
-  ```csharp
-  if (OperatingSystem.IsMacOS())
-  {
-      // Call MacSparkle functions
-  }
-  ```
+- **macOS Only**: This library only works on macOS.
 
 - **Library Placement**: Ensure `libMacSparkle.dylib` and `Sparkle.framework` are in your application's bundle or in a location where the system can find it (e.g., alongside your executable or in `@rpath`).
 

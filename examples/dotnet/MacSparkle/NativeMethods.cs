@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices;
 
-namespace MacSparkleDotnetMacOSDemo;
+namespace MacSparkle;
 
-internal static class NativeMethods
+public static class NativeMethods
 {
     private const string LIB = "libMacSparkle.dylib";
 

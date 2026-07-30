@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="MacSparkle/MacSparkle.csproj" />
   <Project Path="MacSparkleAvaloniaUIDemo/MacSparkleAvaloniaUIDemo.csproj" />
   <Project Path="MacSparkleDotnetMacOSDemo/MacSparkleDotnetMacOSDemo.csproj" />
 </Solution>

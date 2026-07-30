@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Copy built libMacSparkle.dylib from repository .build/universal/release into output -->
+  <ItemGroup>
+    <None Include="../../../.build/universal/release/libMacSparkle.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Copy Sparkle.framework into output so the runtime can load it -->
+  <ItemGroup>
+    <None Include="../../../.build/universal/release/Sparkle.framework/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Sparkle.framework\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+  
+</Project>
