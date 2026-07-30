@@ -30,29 +30,29 @@ public func mac_sparkle_check_update_with_ui() {
 /// set automatic check for updates. 1 == true, 0 == false
 @MainActor
 @_cdecl("mac_sparkle_set_automatic_check_for_updates")
-public func mac_sparkle_set_automatic_check_for_updates(_ state: Int32) {
+public func mac_sparkle_set_automatic_check_for_updates(_ state: Int) {
     SparkleUpdater.shared.automaticallyChecksForUpdates = (state != 0)
 }
 
 /// get automatic check for updates state. 1 ==  true, 0 == false
 @MainActor
 @_cdecl("mac_sparkle_get_automatic_check_for_updates")
-public func mac_sparkle_get_automatic_check_for_updates() -> Int32 {
+public func mac_sparkle_get_automatic_check_for_updates() -> Int {
     (SparkleUpdater.shared.automaticallyChecksForUpdates) ? 1 : 0
 }
 
 /// set update check interval
 @MainActor
 @_cdecl("mac_sparkle_set_update_check_interval")
-public func mac_sparkle_set_update_check_interval(_ interval: Int32) {
+public func mac_sparkle_set_update_check_interval(_ interval: Int) {
     SparkleUpdater.shared.updateCheckInterval = TimeInterval(interval)
 }
 
 /// get update check interval
 @MainActor
 @_cdecl("mac_sparkle_get_update_check_interval")
-public func mac_sparkle_get_update_check_interval() -> Int32 {
-    Int32(SparkleUpdater.shared.updateCheckInterval)
+public func mac_sparkle_get_update_check_interval() -> Int {
+    Int(SparkleUpdater.shared.updateCheckInterval)
 }
 
 /// get last update check time
