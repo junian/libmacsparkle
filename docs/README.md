@@ -15,12 +15,13 @@ Thin wrapper for Sparkle updater for macOS. This library provides a C API for in
 
 libMacSparkle wraps the [Sparkle framework](https://sparkle-project.org/) to provide a simple C interface for:
 
-- set appcast URL
-- Initializing updater
+- Setting appcast URL programmatically
+- Initializing the updater
 - Checking for updates manually
 - Configuring automatic update checks
-- Setting update check intervals
+- Setting and getting update check intervals
 - Retrieving last update check time
+- Managing automatic update preferences
 
 The API design is inspired by [WinSparkle](https://github.com/vslavik/winsparkle), providing a similar C interface for cross-platform applications.
 
@@ -199,7 +200,7 @@ public static long GetLastCheckTime()
 }
 ```
 
-### Step 5: Check for Updates (Optional)
+### Step 6: Check for Updates (Optional)
 
 Add a "Check for Updates" menu item or button:
 
@@ -301,6 +302,27 @@ time_t mac_sparkle_get_last_check_time(void);
 
 Gets the last update check time as a Unix timestamp. Returns `-1` if updates have never been checked.
 
+## What's New in v1.1.0
+
+**New API Functions for Automatic Update Management:**
+- `mac_sparkle_set_automatic_check_for_updates()` - Enable/disable automatic update checks
+- `mac_sparkle_get_automatic_check_for_updates()` - Get current automatic update check state  
+- `mac_sparkle_set_update_check_interval()` - Set the update check interval in seconds
+- `mac_sparkle_get_update_check_interval()` - Get the current update check interval
+- `mac_sparkle_get_last_check_time()` - Get the timestamp of the last update check
+
+**Enhanced Examples:**
+- Updated .NET examples with UI controls for managing automatic updates
+- Added visual feedback for update settings and last check time
+- Improved layout with labels and stack views
+
+**Improvements:**
+- Better code organization with MacSparkle namespace in .NET bindings
+- Refactored parameter types for consistency
+- Enhanced documentation with comprehensive examples
+
+See [changelog] for full details.
+
 ## Platform Considerations
 
 - **macOS Only**: This library only works on macOS.
@@ -309,9 +331,9 @@ Gets the last update check time as a Unix timestamp. Returns `-1` if updates hav
 
 ## Examples
 
-See the `examples/csharp` directory for complete working examples:
-- `MacSparkleAvaloniaUIDemo` - Avalonia UI example
-- `MacSparkleDotnetMacOSDemo` - .NET macOS example
+See the [`examples/dotnet`][examples-dotnet] directory for complete working examples:
+- [`MacSparkleAvaloniaUIDemo`][examples-dotnet-avaloniaui] - Avalonia UI example
+- [`MacSparkleDotnetMacOSDemo`][examples-dotnet-macos] - .NET macOS example
 
 ## License
 
@@ -319,3 +341,7 @@ See [LICENSE](https://github.com/junian/libmacsparkle/blob/master/LICENSE) file 
 
 [github]: https://github.com/junian/libmacsparkle "libMacSparkle on GitHub"
 [download-latest]: https://github.com/junian/libmacsparkle/releases/latest "Download latest libMacSparkle.dylib"
+[changelog]: https://github.com/junian/libmacsparkle/blob/master/docs/CHANGELOG.md "View Changelog"
+[examples-dotnet]: https://github.com/junian/libmacsparkle/tree/master/examples/dotnet
+[examples-dotnet-avaloniaui]: https://github.com/junian/libmacsparkle/tree/master/examples/dotnet/MacSparkleAvaloniaUIDemo
+[examples-dotnet-macos]: https://github.com/junian/libmacsparkle/tree/master/examples/dotnet/MacSparkleDotnetMacOSDemo

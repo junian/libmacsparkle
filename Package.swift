@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let tag = "1.0.9"
+let tag = "1.1.0"
 
 let package = Package(
     name: "MacSparkle",
