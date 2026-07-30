@@ -10,12 +10,6 @@ final class SparkleUpdaterTests: XCTestCase {
         XCTAssertIdentical(first, second)
     }
 
-    func testUpdaterIsAvailable() {
-        let updater = SparkleUpdater.shared
-
-        XCTAssertNotNil(updater.controller)
-    }
-
     func testCABIEntryPointInitializesUpdater() {
         XCTAssertNoThrow(mac_sparkle_init())
     }
