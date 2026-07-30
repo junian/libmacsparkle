@@ -1,3 +1,5 @@
+using MacSparkle;
+
 namespace MacSparkleDotnetMacOSDemo;
 
 [Register ("AppDelegate")]

@@ -1,6 +1,7 @@
 using CoreGraphics;
 using ObjCRuntime;
 using AppKit;
+using MacSparkle;
 
 namespace MacSparkleDotnetMacOSDemo;
 
