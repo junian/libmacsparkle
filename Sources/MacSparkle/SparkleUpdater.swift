@@ -12,13 +12,25 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
     private var controller: SPUStandardUpdaterController?
     private var appCastURL: String?
 
+    private let defaultAutomaticallyChecksForUpdates = false
     /// Get or set automatically Checks For Updates
     public var automaticallyChecksForUpdates: Bool {
         get {
-            controller?.updater.automaticallyChecksForUpdates ?? false
+            controller?.updater.automaticallyChecksForUpdates ?? defaultAutomaticallyChecksForUpdates
         }
         set {
             controller?.updater.automaticallyChecksForUpdates = newValue
+        }
+    }
+    
+    private let defaultScheduledCheckInterval = TimeInterval(86_400)
+    /// Get or set update check interval
+    public var updateCheckInterval: TimeInterval {
+        get {
+            controller?.updater.updateCheckInterval ?? defaultScheduledCheckInterval
+        }
+        set {
+            controller?.updater.updateCheckInterval = newValue
         }
     }
     
