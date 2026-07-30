@@ -15,8 +15,12 @@ Thin wrapper for Sparkle updater for macOS. This library provides a C API for in
 
 libMacSparkle wraps the [Sparkle framework](https://sparkle-project.org/) to provide a simple C interface for:
 
+- set appcast URL
 - Initializing updater
 - Checking for updates manually
+- Configuring automatic update checks
+- Setting update check intervals
+- Retrieving last update check time
 
 The API design is inspired by [WinSparkle](https://github.com/vslavik/winsparkle), providing a similar C interface for cross-platform applications.
 
@@ -77,6 +81,21 @@ internal static class MacSparkleWrapper
     [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_check_update_with_ui();
 
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_automatic_check_for_updates", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_set_automatic_check_for_updates(int state);
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_get_automatic_check_for_updates", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int mac_sparkle_get_automatic_check_for_updates();
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_update_check_interval", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_set_update_check_interval(int interval);
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_get_update_check_interval", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int mac_sparkle_get_update_check_interval();
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_get_last_check_time", CallingConvention = CallingConvention.Cdecl)]
+    public static extern long mac_sparkle_get_last_check_time();
+
     public static void Initialize(string appcastUrl)
     {
         mac_sparkle_set_appcast_url(appcastUrl);
@@ -111,6 +130,90 @@ public class App
 
         // Continue with your application startup...
     }
+}
+```
+
+### Step 5: Configure Update Settings (Optional)
+
+You can configure automatic update checking and intervals:
+
+```csharp
+public static void SetAutomaticUpdates(bool enabled)
+{
+    if (OperatingSystem.IsMacOS())
+    {
+        try
+        {
+            mac_sparkle_set_automatic_check_for_updates(enabled ? 1 : 0);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to set automatic updates: {ex.Message}");
+        }
+    }
+}
+
+public static bool GetAutomaticUpdates()
+{
+    if (OperatingSystem.IsMacOS())
+    {
+        try
+        {
+            return mac_sparkle_get_automatic_check_for_updates() == 1;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to get automatic updates state: {ex.Message}");
+        }
+    }
+    return false;
+}
+
+public static void SetUpdateCheckInterval(int seconds)
+{
+    if (OperatingSystem.IsMacOS())
+    {
+        try
+        {
+            mac_sparkle_set_update_check_interval(seconds);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to set update interval: {ex.Message}");
+        }
+    }
+}
+
+public static int GetUpdateCheckInterval()
+{
+    if (OperatingSystem.IsMacOS())
+    {
+        try
+        {
+            return mac_sparkle_get_update_check_interval();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to get update interval: {ex.Message}");
+        }
+    }
+    return 86400; // Default 24 hours
+}
+
+public static long GetLastCheckTime()
+{
+    if (OperatingSystem.IsMacOS())
+    {
+        try
+        {
+            return mac_sparkle_get_last_check_time();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to get last check time: {ex.Message}");
+        }
+    }
+    return -1;
 }
 ```
 
@@ -178,6 +281,46 @@ void mac_sparkle_check_update_with_ui(void);
 ```
 
 Triggers a manual update check with user interface feedback.
+
+### `mac_sparkle_set_automatic_check_for_updates`
+
+```c
+void mac_sparkle_set_automatic_check_for_updates(int state);
+```
+
+Sets whether Sparkle should automatically check for updates. Pass `1` for true, `0` for false.
+
+### `mac_sparkle_get_automatic_check_for_updates`
+
+```c
+int mac_sparkle_get_automatic_check_for_updates(void);
+```
+
+Gets the current automatic update check state. Returns `1` if enabled, `0` if disabled.
+
+### `mac_sparkle_set_update_check_interval`
+
+```c
+void mac_sparkle_set_update_check_interval(int interval);
+```
+
+Sets the update check interval in seconds. The default is 86400 seconds (24 hours).
+
+### `mac_sparkle_get_update_check_interval`
+
+```c
+int mac_sparkle_get_update_check_interval(void);
+```
+
+Gets the current update check interval in seconds.
+
+### `mac_sparkle_get_last_check_time`
+
+```c
+time_t mac_sparkle_get_last_check_time(void);
+```
+
+Gets the last update check time as a Unix timestamp. Returns `-1` if updates have never been checked.
 
 ## Platform Considerations
 
