@@ -26,3 +26,17 @@ public func mac_sparkle_init() {
 public func mac_sparkle_check_update_with_ui() {
     SparkleUpdater.shared.checkForUpdates()
 }
+
+/// set automatic check for updates. 1 == true, 0 == false
+@MainActor
+@_cdecl("mac_sparkle_set_automatic_check_for_updates")
+public func mac_sparkle_set_automatic_check_for_updates(_ state: Int32) {
+    SparkleUpdater.shared.automaticallyChecksForUpdates = (state != 0)
+}
+
+/// get automatic check for updates state. 1 ==  true, 0 == false
+@MainActor
+@_cdecl("mac_sparkle_get_automatic_check_for_updates")
+public func mac_sparkle_get_automatic_check_for_updates() -> Int32 {
+    (SparkleUpdater.shared.automaticallyChecksForUpdates) ? 1 : 0
+}

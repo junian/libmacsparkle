@@ -12,6 +12,16 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
     private var controller: SPUStandardUpdaterController?
     private var appCastURL: String?
 
+    /// Get or set automatically Checks For Updates
+    public var automaticallyChecksForUpdates: Bool {
+        get {
+            controller?.updater.automaticallyChecksForUpdates ?? false
+        }
+        set {
+            controller?.updater.automaticallyChecksForUpdates = newValue
+        }
+    }
+    
     /// Creates the shared updater controller and stores the initial updater reference.
     private override init() {
         super.init()
