@@ -54,3 +54,13 @@ public func mac_sparkle_set_update_check_interval(_ interval: Int32) {
 public func mac_sparkle_get_update_check_interval() -> Int32 {
     Int32(SparkleUpdater.shared.updateCheckInterval)
 }
+
+@MainActor
+@_cdecl("mac_sparkle_get_last_check_time")
+public func mac_sparkle_get_last_check_time() -> time_t {
+    guard let date = SparkleUpdater.shared.lastUpdateCheckDate else {
+        return -1
+    }
+
+    return time_t(date.timeIntervalSince1970)
+}

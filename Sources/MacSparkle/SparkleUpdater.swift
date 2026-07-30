@@ -34,6 +34,12 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
         }
     }
     
+    public var lastUpdateCheckDate: Date? {
+        get {
+            controller?.updater.lastUpdateCheckDate
+        }
+    }
+    
     /// Creates the shared updater controller and stores the initial updater reference.
     private override init() {
         super.init()
