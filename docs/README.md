@@ -45,8 +45,20 @@ Your application's `Info.plist` file must include the following entries for Spar
 - **CFBundleIdentifier**: Your application's unique bundle identifier (e.g., `com.yourcompany.yourapp`)
 - **CFBundleVersion**: The build version (e.g., `100` or `1.0.0`)
 - **CFBundleShortVersionString**: The display version shown to users (e.g., `1.0.0`)
-- **SUFeedURL**: The URL to your appcast feed.
+- **SUFeedURL**: The URL to your appcast feed. Can be overridden using `mac_sparkle_set_appcast_url()`
 - **SUPublicEDKey**: Your EdDSA public key for signature verification.
+
+**Optional Sparkle Entries:**
+
+- **SUEnableAutomaticChecks**: Enable/disable automatic update checks (default: `YES`). Can be overridden using `mac_sparkle_set_automatic_check_for_updates()`
+- **SUUpdateCheckInterval**: Update check interval in seconds (default: `86400` for daily). Can be overridden using `mac_sparkle_set_update_check_interval()`
+- **SUAllowsAutomaticUpdates**: Allow automatic installation of updates (default: `NO`)
+- **SUAutomaticallyUpdates**: Automatically install updates without user interaction (default: `NO`)
+- **SUEnableSystemProfiling**: Enable system profiling for anonymous usage data (default: `NO`)
+- **SUSendProfileInfo**: Send system profile information with update checks (default: `NO`)
+- **SUShowReleaseNotes**: Show release notes when updates are available (default: `YES`)
+- **SUEnableDownloaderService**: Use Sparkle's built-in downloader service (default: `YES`)
+- **SUScheduledCheckInterval**: Background scheduled check interval in seconds (default: `86400`)
 
 **Example Info.plist:**
 
@@ -62,6 +74,11 @@ Your application's `Info.plist` file must include the following entries for Spar
 <string>https://example.com/updates/appcast.xml</string>
 <key>SUPublicEDKey</key>
 <string>your-eddsa-public-key-here</string>
+
+<key>SUEnableAutomaticChecks</key>
+<true/>
+<key>SUUpdateCheckInterval</key>
+<integer>86400</integer>
 ```
 
 ### Step 3: Create a Wrapper Class (C# Example)
