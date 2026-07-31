@@ -42,6 +42,9 @@ time_t mac_sparkle_get_last_check_time(void);
 // the buffers and may free them immediately after this function returns.
 void mac_sparkle_set_http_header(const char* name, const char* value);
 
+// Clears all HTTP headers previously set with mac_sparkle_set_http_header.
+void mac_sparkle_clear_http_headers(void);
+
 #ifdef __cplusplus
 }
 #endif

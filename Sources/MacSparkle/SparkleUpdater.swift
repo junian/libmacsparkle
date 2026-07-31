@@ -59,6 +59,11 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
         controller?.updater.httpHeaders = headers
     }
     
+    /// Removes all HTTP headers previously set on the updater.
+    public func clearHTTPHeaders() {
+        controller?.updater.httpHeaders = nil
+    }
+    
     /// Creates the shared updater controller and stores the initial updater reference.
     private override init() {
         super.init()

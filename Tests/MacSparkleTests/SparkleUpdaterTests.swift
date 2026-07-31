@@ -121,6 +121,29 @@ final class SparkleUpdaterTests: XCTestCase {
         XCTAssertEqual(updater.httpHeaders?["X-Second-Header"], "second-value")
     }
 
+    func testCABIEntryPointClearsHTTPHeaders() {
+        SparkleUpdater.shared.setHTTPHeader("Authorization", value: "Bearer token")
+        SparkleUpdater.shared.setHTTPHeader("X-Custom", value: "value")
+
+        XCTAssertNoThrow(mac_sparkle_clear_http_headers())
+        XCTAssertNil(SparkleUpdater.shared.httpHeaders)
+    }
+
+    func testSparkleUpdaterClearHTTPHeaders() {
+        let updater = SparkleUpdater.shared
+
+        updater.setHTTPHeader("X-Custom-Header", value: "custom-value")
+        updater.setHTTPHeader("X-Second-Header", value: "second-value")
+        XCTAssertNotNil(updater.httpHeaders)
+
+        updater.clearHTTPHeaders()
+        XCTAssertNil(updater.httpHeaders)
+
+        // Clearing when already empty should be a no-op
+        XCTAssertNoThrow(updater.clearHTTPHeaders())
+        XCTAssertNil(updater.httpHeaders)
+    }
+
     func testCABIAutomaticCheckForUpdatesEdgeCases() {
         // Test with various integer values
         XCTAssertNoThrow(mac_sparkle_set_automatic_check_for_updates(1))

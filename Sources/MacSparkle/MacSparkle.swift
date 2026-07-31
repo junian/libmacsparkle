@@ -78,3 +78,10 @@ public func mac_sparkle_set_http_header(_ name: UnsafePointer<CChar>?, _ value: 
     let headerValue = String(cString: value)
     SparkleUpdater.shared.setHTTPHeader(headerName, value: headerValue)
 }
+
+/// Clears all HTTP headers previously set with mac_sparkle_set_http_header.
+@MainActor
+@_cdecl("mac_sparkle_clear_http_headers")
+public func mac_sparkle_clear_http_headers() {
+    SparkleUpdater.shared.clearHTTPHeaders()
+}
