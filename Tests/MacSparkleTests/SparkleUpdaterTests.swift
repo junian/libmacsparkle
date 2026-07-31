@@ -1,5 +1,12 @@
 import XCTest
 @testable import MacSparkle
+import Sparkle
+
+nonisolated(unsafe) private var g_errorCallbackInvoked = false
+
+private func errorCallbackStub() {
+    g_errorCallbackInvoked = true
+}
 
 @MainActor
 final class SparkleUpdaterTests: XCTestCase {
@@ -180,6 +187,64 @@ final class SparkleUpdaterTests: XCTestCase {
         // Test with large interval
         XCTAssertNoThrow(mac_sparkle_set_update_check_interval(604800)) // 1 week
         XCTAssertEqual(mac_sparkle_get_update_check_interval(), 604800)
+    }
+
+    func testCABIEntryPointSetsErrorCallback() {
+        XCTAssertNoThrow(mac_sparkle_set_error_callback(errorCallbackStub))
+        // Clean up so other tests are unaffected
+        mac_sparkle_set_error_callback(nil)
+    }
+
+    func testCABIEntryPointClearsErrorCallback() {
+        XCTAssertNoThrow(mac_sparkle_set_error_callback(errorCallbackStub))
+        XCTAssertNoThrow(mac_sparkle_set_error_callback(nil))
+    }
+
+    func testSparkleUpdaterErrorCallbackInvokedOnError() {
+        let updater = SparkleUpdater.shared
+        guard let currentUpdater = updater.currentUpdater else {
+            XCTFail("updater should be available")
+            return
+        }
+
+        g_errorCallbackInvoked = false
+        updater.setErrorCallback(errorCallbackStub)
+
+        updater.updater(
+            currentUpdater,
+            didAbortWithError: NSError(
+                domain: SUSparkleErrorDomain,
+                code: Int(SUError.appcastError.rawValue),
+                userInfo: nil
+            )
+        )
+
+        XCTAssertTrue(g_errorCallbackInvoked)
+        updater.setErrorCallback(nil)
+    }
+
+    func testSparkleUpdaterErrorCallbackNotInvokedForNoUpdate() {
+        let updater = SparkleUpdater.shared
+        guard let currentUpdater = updater.currentUpdater else {
+            XCTFail("updater should be available")
+            return
+        }
+
+        g_errorCallbackInvoked = false
+        updater.setErrorCallback(errorCallbackStub)
+
+        // "No update found" is a normal outcome, not an error
+        updater.updater(
+            currentUpdater,
+            didAbortWithError: NSError(
+                domain: SUSparkleErrorDomain,
+                code: Int(SUError.noUpdateError.rawValue),
+                userInfo: nil
+            )
+        )
+
+        XCTAssertFalse(g_errorCallbackInvoked)
+        updater.setErrorCallback(nil)
     }
 
 }

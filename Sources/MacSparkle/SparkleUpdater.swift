@@ -97,6 +97,35 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
         controller?.updater.checkForUpdatesInBackground()
     }
     
+    /// The underlying `SPUUpdater` instance, if the controller has been created.
+    var currentUpdater: SPUUpdater? {
+        controller?.updater
+    }
+
+    /// The C callback invoked when the updater encounters an error.
+    private var errorCallback: (@convention(c) () -> Void)?
+
+    /// Sets the callback to be invoked when the updater encounters an error.
+    public func setErrorCallback(_ callback: (@convention(c) () -> Void)?) {
+        self.errorCallback = callback
+    }
+
+    public func updater(_ updater: SPUUpdater, didAbortWithError error: any Error) {
+        guard let errorCallback else {
+            return
+        }
+
+        let nsError = error as NSError
+        // "No update found" is a normal outcome and a canceled installation is
+        // user-initiated; neither should be reported to the error callback.
+        guard nsError.code != Int(SUError.noUpdateError.rawValue),
+              nsError.code != Int(SUError.installationCanceledError.rawValue) else {
+            return
+        }
+
+        errorCallback()
+    }
+    
     public func feedURLString(for updater: SPUUpdater) -> String? {
         return appCastURL;
     }

@@ -95,3 +95,10 @@ public func mac_sparkle_set_http_header(_ name: UnsafePointer<CChar>?, _ value: 
 public func mac_sparkle_clear_http_headers() {
     SparkleUpdater.shared.clearHTTPHeaders()
 }
+
+/// Sets a callback to be invoked when the updater encounters an error.
+@MainActor
+@_cdecl("mac_sparkle_set_error_callback")
+public func mac_sparkle_set_error_callback(_ callback: (@convention(c) () -> Void)?) {
+    SparkleUpdater.shared.setErrorCallback(callback)
+}

@@ -1,5 +1,6 @@
 <div align="center">
 
+<!-- omit from toc -->
 # libMacSparkle
 
 Thin wrapper for Sparkle updater for macOS. This library provides a C API for integrating Sparkle's automatic update functionality into cross-platform applications (e.g., .NET, Rust, Go, etc.) on macOS.
@@ -10,6 +11,37 @@ Thin wrapper for Sparkle updater for macOS. This library provides a C API for in
 [![Buy me a coffee](https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-FFDD00?logo=buymeacoffee&style=for-the-badge "Buy me a coffee")](https://www.junian.dev/coffee/)
 
 </div>
+
+<details open>
+    <summary>Table of Contents</summary>
+
+- [Overview](#overview)
+- [Quickstart](#quickstart)
+  - [Step 1: Download Dependencies](#step-1-download-dependencies)
+  - [Step 2: Configure Info.plist](#step-2-configure-infoplist)
+  - [Step 3: Create a Wrapper Class (C# Example)](#step-3-create-a-wrapper-class-c-example)
+  - [Step 4: Initialize on Application Startup](#step-4-initialize-on-application-startup)
+  - [Step 5: Configure Update Settings (Optional)](#step-5-configure-update-settings-optional)
+  - [Step 6: Check for Updates (Optional)](#step-6-check-for-updates-optional)
+- [Development](#development)
+- [Public API](#public-api)
+  - [`mac_sparkle_set_appcast_url`](#mac_sparkle_set_appcast_url)
+  - [`mac_sparkle_init`](#mac_sparkle_init)
+  - [`mac_sparkle_check_update_with_ui`](#mac_sparkle_check_update_with_ui)
+  - [`mac_sparkle_check_update_without_ui`](#mac_sparkle_check_update_without_ui)
+  - [`mac_sparkle_set_automatic_check_for_updates`](#mac_sparkle_set_automatic_check_for_updates)
+  - [`mac_sparkle_get_automatic_check_for_updates`](#mac_sparkle_get_automatic_check_for_updates)
+  - [`mac_sparkle_set_update_check_interval`](#mac_sparkle_set_update_check_interval)
+  - [`mac_sparkle_get_update_check_interval`](#mac_sparkle_get_update_check_interval)
+  - [`mac_sparkle_get_last_check_time`](#mac_sparkle_get_last_check_time)
+  - [`mac_sparkle_set_http_header`](#mac_sparkle_set_http_header)
+  - [`mac_sparkle_clear_http_headers`](#mac_sparkle_clear_http_headers)
+  - [`mac_sparkle_set_error_callback`](#mac_sparkle_set_error_callback)
+- [Platform Considerations](#platform-considerations)
+- [Examples](#examples)
+- [License](#license)
+
+</details>
 
 ## Overview
 
@@ -125,6 +157,12 @@ internal static class MacSparkleWrapper
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_clear_http_headers", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_clear_http_headers();
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void MacSparkleErrorCallback();
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_error_callback", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_set_error_callback(MacSparkleErrorCallback callback);
 
     public static void Initialize(string appcastUrl)
     {
@@ -356,6 +394,18 @@ void mac_sparkle_clear_http_headers(void);
 ```
 
 Clears all HTTP headers previously set using `mac_sparkle_set_http_header`.
+
+### `mac_sparkle_set_error_callback`
+
+```c
+typedef void (__cdecl *mac_sparkle_error_callback_t)();
+
+void mac_sparkle_set_error_callback(
+  mac_sparkle_error_callback_t callback
+);
+```
+
+Sets a callback to be called when the updater encounters an error. The callback is invoked on the main thread with no arguments. Pass `NULL` to clear the previously set callback. The callback is not invoked for the normal "no update found" outcome or for a user-canceled installation.
 
 ## Platform Considerations
 

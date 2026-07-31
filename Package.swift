@@ -32,7 +32,10 @@ let package = Package(
         ),
         .testTarget(
             name: "MacSparkleTests",
-            dependencies: ["MacSparkle"]
+            dependencies: [
+                "MacSparkle",
+                .product(name: "Sparkle", package: "Sparkle"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v6]

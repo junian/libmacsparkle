@@ -38,4 +38,10 @@ public static class NativeMethods
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_clear_http_headers", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_clear_http_headers();
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void MacSparkleErrorCallback();
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_error_callback", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_set_error_callback(MacSparkleErrorCallback callback);
 }

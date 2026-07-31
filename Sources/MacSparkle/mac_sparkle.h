@@ -51,6 +51,15 @@ void mac_sparkle_set_http_header(const char* name, const char* value);
 // Clears all HTTP headers previously set with mac_sparkle_set_http_header.
 void mac_sparkle_clear_http_headers(void);
 
+// Sets a callback to be called when the updater encounters an error.
+// The callback is invoked on the main thread with no arguments.
+// Pass NULL to clear the previously set callback.
+typedef void (__cdecl *mac_sparkle_error_callback_t)();
+
+void mac_sparkle_set_error_callback(
+  mac_sparkle_error_callback_t callback
+);
+
 #ifdef __cplusplus
 }
 #endif

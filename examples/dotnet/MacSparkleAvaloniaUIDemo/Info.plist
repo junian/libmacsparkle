@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
   <key>CFBundleIdentifier</key>
-  <string>com.example.MacSparkleDemo</string>
+  <string>com.juniandev.libmacsparkle.avaloniauidemo</string>
   <key>CFBundleName</key>
   <string>MacSparkleDemo</string>
   <key>CFBundleExecutable</key>

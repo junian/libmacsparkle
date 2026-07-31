@@ -1,4 +1,5 @@
 ﻿using System;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using MacSparkle;
 
@@ -21,6 +22,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string _lastCheckText = "Loading...";
 
+    [ObservableProperty]
+    private string _httpHeaderName = "Authorization";
+
+    [ObservableProperty]
+    private string _httpHeaderValue = "Bearer your-token-here";
+
+    [ObservableProperty]
+    private string _errorMessageText = "No errors reported";
+
+    private NativeMethods.MacSparkleErrorCallback? _errorCallback;
+
     public string Greeting { get; } = "Welcome to Avalonia!";
 
     public MainWindowViewModel()
@@ -33,11 +45,19 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             NativeMethods.mac_sparkle_set_appcast_url("https://sparkle-project.org/files/sparkletestcast.xml");
+
+            // Set an example HTTP header before initializing
+            NativeMethods.mac_sparkle_set_http_header("X-Example-Header", "libMacSparkle-demo");
+
+            // Register an error callback that marshals back to the UI thread
+            _errorCallback = OnSparkleError;
+            NativeMethods.mac_sparkle_set_error_callback(_errorCallback);
+
             NativeMethods.mac_sparkle_init();
-            
+
             // Configure automatic updates
             NativeMethods.mac_sparkle_set_automatic_check_for_updates(1);
-            
+
             // Set update check interval to 1 hour (3600 seconds)
             NativeMethods.mac_sparkle_set_update_check_interval(3600);
 
@@ -52,6 +72,11 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private void OnSparkleError()
+    {
+        Dispatcher.UIThread.Post(() => ErrorMessageText = $"Sparkle error occurred at {DateTime.Now}");
+    }
+
     public void CheckForUpdates()
     {
         try
@@ -63,6 +88,45 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception ex)
         {
             Console.WriteLine($"Failed to check for updates: {ex.Message}");
+        }
+    }
+
+    public void CheckForUpdatesWithoutUI()
+    {
+        try
+        {
+            NativeMethods.mac_sparkle_check_update_without_ui();
+            LastCheckTime = GetLastCheckTime();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to check for updates in background: {ex.Message}");
+        }
+    }
+
+    public void SetHttpHeader()
+    {
+        try
+        {
+            NativeMethods.mac_sparkle_set_http_header(HttpHeaderName, HttpHeaderValue);
+            Console.WriteLine($"Set HTTP header '{HttpHeaderName}'");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to set HTTP header: {ex.Message}");
+        }
+    }
+
+    public void ClearHttpHeaders()
+    {
+        try
+        {
+            NativeMethods.mac_sparkle_clear_http_headers();
+            Console.WriteLine("Cleared HTTP headers");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to clear HTTP headers: {ex.Message}");
         }
     }
 
