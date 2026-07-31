@@ -21,6 +21,12 @@ void mac_sparkle_init(void);
 // Triggers a manual update check with user interface feedback.
 void mac_sparkle_check_update_with_ui(void);
 
+// Triggers an update check in the background without user interface feedback.
+// Use with caution and generally not recommended: by default Sparkle schedules
+// background checks automatically, and calling this manually may interfere
+// with Sparkle's scheduler.
+void mac_sparkle_check_update_without_ui(void);
+
 // Set automatic check for updates. 1 == true, 0 == false
 void mac_sparkle_set_automatic_check_for_updates(int state);
 

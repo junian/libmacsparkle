@@ -15,6 +15,9 @@ public static class NativeMethods
     [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_check_update_with_ui();
 
+    [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_without_ui", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_check_update_without_ui();
+
     [DllImport(LIB, EntryPoint = "mac_sparkle_set_automatic_check_for_updates", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_set_automatic_check_for_updates(int state);
 

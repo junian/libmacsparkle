@@ -102,6 +102,9 @@ internal static class MacSparkleWrapper
     [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_check_update_with_ui();
 
+    [DllImport(LIB, EntryPoint = "mac_sparkle_check_update_without_ui", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void mac_sparkle_check_update_without_ui();
+
     [DllImport(LIB, EntryPoint = "mac_sparkle_set_automatic_check_for_updates", CallingConvention = CallingConvention.Cdecl)]
     public static extern void mac_sparkle_set_automatic_check_for_updates(int state);
 
@@ -287,6 +290,16 @@ void mac_sparkle_check_update_with_ui(void);
 ```
 
 Triggers a manual update check with user interface feedback.
+
+### `mac_sparkle_check_update_without_ui`
+
+```c
+void mac_sparkle_check_update_without_ui(void);
+```
+
+Triggers an update check in the background without user interface feedback.
+
+> **Caution**: Use this function with caution and generally not recommended. By default Sparkle schedules background checks automatically, and calling this manually may interfere with Sparkle's scheduler.
 
 ### `mac_sparkle_set_automatic_check_for_updates`
 

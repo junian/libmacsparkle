@@ -18,6 +18,10 @@ final class SparkleUpdaterTests: XCTestCase {
         XCTAssertNoThrow(mac_sparkle_check_update_with_ui())
     }
 
+    func testCABIEntryPointChecksForUpdatesWithoutUI() {
+        XCTAssertNoThrow(mac_sparkle_check_update_without_ui())
+    }
+
     func testCABIEntryPointSetsAppcastURL() {
         XCTAssertNoThrow(mac_sparkle_set_appcast_url("https://example.com/appcast.xml"))
     }
@@ -54,6 +58,11 @@ final class SparkleUpdaterTests: XCTestCase {
     func testSparkleUpdaterCheckForUpdates() {
         let updater = SparkleUpdater.shared
         XCTAssertNoThrow(updater.checkForUpdates())
+    }
+
+    func testSparkleUpdaterCheckForUpdatesInBackground() {
+        let updater = SparkleUpdater.shared
+        XCTAssertNoThrow(updater.checkForUpdatesInBackground())
     }
 
     func testSparkleUpdaterAutomaticallyChecksForUpdates() {

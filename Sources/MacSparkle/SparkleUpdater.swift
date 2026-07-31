@@ -88,6 +88,14 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
     public func checkForUpdates() {
         controller?.checkForUpdates(nil)
     }
+
+    /// Triggers Sparkle to check for updates in the background without UI.
+    /// Use with caution and generally not recommended: Sparkle schedules
+    /// background checks automatically by default, and calling this manually
+    /// may interfere with Sparkle's scheduler.
+    public func checkForUpdatesInBackground() {
+        controller?.updater.checkForUpdatesInBackground()
+    }
     
     public func feedURLString(for updater: SPUUpdater) -> String? {
         return appCastURL;

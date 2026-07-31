@@ -27,6 +27,16 @@ public func mac_sparkle_check_update_with_ui() {
     SparkleUpdater.shared.checkForUpdates()
 }
 
+/// Invokes an update check in the background without user interface feedback.
+/// Use with caution and generally not recommended: Sparkle schedules background
+/// checks automatically by default, and calling this manually may interfere
+/// with Sparkle's scheduler.
+@MainActor
+@_cdecl("mac_sparkle_check_update_without_ui")
+public func mac_sparkle_check_update_without_ui() {
+    SparkleUpdater.shared.checkForUpdatesInBackground()
+}
+
 /// set automatic check for updates. 1 == true, 0 == false
 @MainActor
 @_cdecl("mac_sparkle_set_automatic_check_for_updates")
