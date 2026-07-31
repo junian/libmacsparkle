@@ -8,6 +8,10 @@
 extern "C" {
 #endif
 
+// All functions in this header must be called on the main thread.
+// The URL is copied synchronously; the caller retains ownership of the
+// buffer and may free it immediately after this function returns.
+//
 // Sets the appcast URL for Sparkle. Must be called before mac_sparkle_init.
 void mac_sparkle_set_appcast_url(const char* url);
 
