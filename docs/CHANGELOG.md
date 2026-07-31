@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-08-01
+
+### Added
+- New C API functions for HTTP headers on update requests:
+  - `mac_sparkle_set_http_header()` - Set an HTTP header to be sent with update requests (appcast checks, release note downloads, and update downloads)
+  - `mac_sparkle_clear_http_headers()` - Clear all HTTP headers previously set with `mac_sparkle_set_http_header()`
+- New `mac_sparkle_check_update_without_ui()` C API function to check for updates in the background without user interface feedback
+- New `mac_sparkle_set_error_callback()` C API function (and `mac_sparkle_error_callback_t` typedef) to set a callback invoked when the updater encounters an error
+
+### Changed
+- Documented main thread requirements for the C API functions in the header
+- Updated README with documentation for the new API functions
+
 ## [1.1.0] - 2026-07-31
 
 ### Added
