@@ -22,6 +22,7 @@ libMacSparkle wraps the [Sparkle framework](https://sparkle-project.org/) to pro
 - Setting and getting update check intervals
 - Retrieving last update check time
 - Managing automatic update preferences
+- Setting HTTP headers for update requests
 
 The API design is inspired by [WinSparkle](https://github.com/vslavik/winsparkle), providing a similar C interface for cross-platform applications.
 
@@ -115,6 +116,9 @@ internal static class MacSparkleWrapper
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_get_last_check_time", CallingConvention = CallingConvention.Cdecl)]
     public static extern long mac_sparkle_get_last_check_time();
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_http_header", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+    public static extern void mac_sparkle_set_http_header([MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string value);
 
     public static void Initialize(string appcastUrl)
     {
@@ -320,6 +324,14 @@ time_t mac_sparkle_get_last_check_time(void);
 ```
 
 Gets the last update check time as a Unix timestamp. Returns `-1` if updates have never been checked.
+
+### `mac_sparkle_set_http_header`
+
+```c
+void mac_sparkle_set_http_header(const char* name, const char* value);
+```
+
+Sets an HTTP header to be sent with update requests (appcast checks, release note downloads, and update downloads). The header is stored on the updater's `httpHeaders` dictionary; calling it again with the same name replaces the previous value. Pass `NULL` for either argument to ignore the call.
 
 ## Platform Considerations
 

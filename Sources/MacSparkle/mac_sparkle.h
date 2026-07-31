@@ -36,6 +36,12 @@ int mac_sparkle_get_update_check_interval(void);
 // Get last update check time (Unix timestamp). Returns -1 if never checked
 time_t mac_sparkle_get_last_check_time(void);
 
+// Sets an HTTP header to be sent with update requests. The header is stored in
+// the updater's httpHeaders dictionary and applied to future requests.
+// Both name and value are copied synchronously; the caller retains ownership of
+// the buffers and may free them immediately after this function returns.
+void mac_sparkle_set_http_header(const char* name, const char* value);
+
 #ifdef __cplusplus
 }
 #endif

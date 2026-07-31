@@ -65,3 +65,16 @@ public func mac_sparkle_get_last_check_time() -> time_t {
 
     return time_t(date.timeIntervalSince1970)
 }
+
+/// Sets an HTTP header to be sent with update requests from a C caller.
+@MainActor
+@_cdecl("mac_sparkle_set_http_header")
+public func mac_sparkle_set_http_header(_ name: UnsafePointer<CChar>?, _ value: UnsafePointer<CChar>?) {
+    guard let name, let value else {
+        return
+    }
+
+    let headerName = String(cString: name)
+    let headerValue = String(cString: value)
+    SparkleUpdater.shared.setHTTPHeader(headerName, value: headerValue)
+}

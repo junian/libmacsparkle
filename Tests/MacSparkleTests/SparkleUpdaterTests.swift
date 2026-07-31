@@ -92,6 +92,35 @@ final class SparkleUpdaterTests: XCTestCase {
         XCTAssertNoThrow(mac_sparkle_set_appcast_url(nil))
     }
 
+    func testCABIEntryPointSetsHTTPHeader() {
+        XCTAssertNoThrow(mac_sparkle_set_http_header("Authorization", "Bearer token"))
+        XCTAssertEqual(SparkleUpdater.shared.httpHeaders?["Authorization"], "Bearer token")
+    }
+
+    func testCABIWithNullHTTPHeader() {
+        // Should handle null name/value gracefully
+        XCTAssertNoThrow(mac_sparkle_set_http_header(nil, nil))
+        XCTAssertNoThrow(mac_sparkle_set_http_header("X-Test", nil))
+        XCTAssertNoThrow(mac_sparkle_set_http_header(nil, "value"))
+    }
+
+    func testSparkleUpdaterSetHTTPHeader() {
+        let updater = SparkleUpdater.shared
+
+        updater.setHTTPHeader("X-Custom-Header", value: "custom-value")
+        XCTAssertEqual(updater.httpHeaders?["X-Custom-Header"], "custom-value")
+
+        // Adding a second header should preserve the first
+        updater.setHTTPHeader("X-Second-Header", value: "second-value")
+        XCTAssertEqual(updater.httpHeaders?["X-Custom-Header"], "custom-value")
+        XCTAssertEqual(updater.httpHeaders?["X-Second-Header"], "second-value")
+
+        // Setting an existing header should overwrite it
+        updater.setHTTPHeader("X-Custom-Header", value: "updated-value")
+        XCTAssertEqual(updater.httpHeaders?["X-Custom-Header"], "updated-value")
+        XCTAssertEqual(updater.httpHeaders?["X-Second-Header"], "second-value")
+    }
+
     func testCABIAutomaticCheckForUpdatesEdgeCases() {
         // Test with various integer values
         XCTAssertNoThrow(mac_sparkle_set_automatic_check_for_updates(1))

@@ -29,4 +29,7 @@ public static class NativeMethods
 
     [DllImport(LIB, EntryPoint = "mac_sparkle_get_last_check_time", CallingConvention = CallingConvention.Cdecl)]
     public static extern long mac_sparkle_get_last_check_time();
+
+    [DllImport(LIB, EntryPoint = "mac_sparkle_set_http_header", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+    public static extern void mac_sparkle_set_http_header([MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string value);
 }

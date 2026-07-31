@@ -40,6 +40,25 @@ public final class SparkleUpdater: NSObject, SPUUpdaterDelegate {
         }
     }
     
+    /// The HTTP headers used when checking for updates, downloading release
+    /// notes, and downloading updates.
+    public var httpHeaders: [String: String]? {
+        get {
+            controller?.updater.httpHeaders
+        }
+        set {
+            controller?.updater.httpHeaders = newValue
+        }
+    }
+    
+    /// Sets an HTTP header to be sent with update requests, adding or replacing
+    /// the header with the given name.
+    public func setHTTPHeader(_ name: String, value: String) {
+        var headers = controller?.updater.httpHeaders ?? [:]
+        headers[name] = value
+        controller?.updater.httpHeaders = headers
+    }
+    
     /// Creates the shared updater controller and stores the initial updater reference.
     private override init() {
         super.init()
