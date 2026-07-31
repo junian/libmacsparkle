@@ -7,6 +7,9 @@ let tag = "1.1.0"
 
 let package = Package(
     name: "MacSparkle",
+    platforms: [
+        .macOS(.v10_13),
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
