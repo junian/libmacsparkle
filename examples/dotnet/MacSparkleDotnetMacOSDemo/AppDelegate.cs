@@ -8,6 +8,10 @@ public class AppDelegate : NSApplicationDelegate {
 	{
 		try {
 			NativeMethods.mac_sparkle_set_appcast_url("https://sparkle-project.org/files/sparkletestcast.xml");
+
+			// Set an example HTTP header before initializing
+			NativeMethods.mac_sparkle_set_http_header("X-Example-Header", "libMacSparkle-demo");
+
 			NativeMethods.mac_sparkle_init();
 			
 			// Configure automatic updates
