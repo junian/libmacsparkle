@@ -1,5 +1,7 @@
 <div align="center">
 
+![libMacSparkle Logo](https://raw.githubusercontent.com/junian/upsparkle/master/docs/assets/img/upsparkle-icon.png)
+
 <!-- omit from toc -->
 # libMacSparkle
 
